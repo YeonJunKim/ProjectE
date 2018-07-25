@@ -9,23 +9,42 @@ import android.widget.EditText;
 
 public class LoginActivity extends AppCompatActivity {
 
+    Button loginButton;
+    Button registerButton;
+    Button findPwButton;
+    EditText idEditText;
+    EditText pwEditText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        Button loginButton = (Button)findViewById(R.id.loginButton);
-        Button registerButton = (Button)findViewById(R.id.registerButton);
-        Button findPwButton = (Button)findViewById(R.id.findPwButton);
-        EditText idEditText = findViewById(R.id.idEditText);
-        EditText pwEditText = findViewById(R.id.pwEditText);
+        loginButton = (Button)findViewById(R.id.loginButton);
+        registerButton = (Button)findViewById(R.id.registerButton);
+        findPwButton = (Button)findViewById(R.id.findPwButton);
+        idEditText = findViewById(R.id.idEditText);
+        pwEditText = findViewById(R.id.pwEditText);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                if()
+                if(idEditText.getText().length() == 0){
+                    MySingletone.getInstance().ShowToastMessage("Id is empty", getApplicationContext());
+                    return;
+                }
 
+                if(idEditText.getText().length() == 0){
+                    MySingletone.getInstance().ShowToastMessage("Password is empty", getApplicationContext());
+                    return;
+                }
+
+                // check id, password with the server
+                // <-----------------------------------------
+
+
+                MySingletone.getInstance().ShowToastMessage("Login Success!", getApplicationContext());
                 //Go to the first page of the app
             }
         });
