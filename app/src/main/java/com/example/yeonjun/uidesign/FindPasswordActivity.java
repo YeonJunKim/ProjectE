@@ -27,23 +27,28 @@ public class FindPasswordActivity extends AppCompatActivity {
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                // 1. check if its empty
+            public void onClick(View view) {    // on Submit button click
+                // 1. check if id line is empty
                 if(idEditText.getText().length() == 0) {
                     MySingletone.getInstance().ShowToastMessage("Id is empty", getApplicationContext());
                     return;
                 }
 
+                // 2. check if email line is empty
                 if(emailEditText.getText().length() == 0) {
                     MySingletone.getInstance().ShowToastMessage("Email is empty", getApplicationContext());
                     return;
                 }
 
-                // 2. check if the e-mail input is a e-mail format
+                // 3. check if the e-mail input is a e-mail format
                 if(MySingletone.getInstance().isEmailValid(emailEditText.getText()) == false){
                     MySingletone.getInstance().ShowToastMessage("Email is not valid", getApplicationContext());
                     return;
                 }
+
+                // ask server if the "id and email" exists and matches
+                // <-----------------------------------
+
 
                 Intent intent = new Intent(
                         getApplicationContext(), // 현재 화면의 제어권자

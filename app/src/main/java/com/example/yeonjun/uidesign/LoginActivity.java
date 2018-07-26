@@ -28,14 +28,14 @@ public class LoginActivity extends AppCompatActivity {
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view) {    // on Login button click
 
                 if(idEditText.getText().length() == 0){
                     MySingletone.getInstance().ShowToastMessage("Id is empty", getApplicationContext());
                     return;
                 }
 
-                if(idEditText.getText().length() == 0){
+                if(pwEditText.getText().length() == 0){
                     MySingletone.getInstance().ShowToastMessage("Password is empty", getApplicationContext());
                     return;
                 }
@@ -51,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view) {    // on Register button click
                 Intent intent = new Intent(
                         getApplicationContext(), // 현재 화면의 제어권자
                         RegisterActivity.class); // 다음 넘어갈 클래스 지정
@@ -61,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
 
         findPwButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view) {    // on Forgot Password? button click
                 Intent intent = new Intent(
                         getApplicationContext(), // 현재 화면의 제어권자
                         FindPasswordActivity.class); // 다음 넘어갈 클래스 지정
