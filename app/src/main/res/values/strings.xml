@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">UIDesign</string>
+
+    <string name="testURL">"http://192.241.221.155:8081/api/test"</string>
+    <string name="url_sgu_drq">"http://192.241.221.155:8081/api/test"</string>
+    <string name="url_sign_in">"http://192.241.221.155:8081/api/test"</string>
+    <string name="url_forgot_password">"http://192.241.221.155:8081/api/test"</string>
+
 </resources>
