@@ -1,17 +1,34 @@
 package com.example.yeonjun.uidesign;
 
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import org.json.JSONObject;
 
 public class ResetPasswordActivity extends AppCompatActivity {
 
     Button submitButton;
     EditText pwEditText;
     EditText pwConfirmEditText;
+
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case StatusCode.SUCCESS:
+                    break;
+                case StatusCode.FAILED:
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +56,17 @@ public class ResetPasswordActivity extends AppCompatActivity {
                 if(pwEditText.getText().toString().contentEquals(pwConfirmEditText.getText()) == false){
                     MySingletone.getInstance().ShowToastMessage("confirm password does not match!", getApplicationContext());
                     return;
+                }
+
+                // ask server if the code is correct
+                // <--------------------------------
+                try {
+                    JSONObject data = new JSONObject();
+                    data.put("password", pwEditText.getText().toString());
+                    new HttpTransfer(mHandler).execute(getString(R.string.testURL), data.toString());
+                }
+                catch (Exception e){
+                    Log.i("ERROR", e.toString());
                 }
 
                 MySingletone.getInstance().ShowToastMessage("password changed!", getApplicationContext());

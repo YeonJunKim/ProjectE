@@ -1,8 +1,6 @@
 package com.example.yeonjun.uidesign;
 
 public class StatusCode {
-    public static final int SGI = 100;
-    public static final int SGU = 200;
-    public static final int SGO = 2;
-    public static final int UPU = 3;
+    public static final int FAILED = 0;
+    public static final int SUCCESS = 1;
 }

@@ -16,13 +16,11 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class HttpTransfer extends AsyncTask<String, String, String>{
-    private Context context;
+public class HttpTransfer extends AsyncTask<String, String, Integer>{
     private Handler handler;
 
-    public HttpTransfer(Context context, Handler handler) {
+    public HttpTransfer(Handler handler) {
         super();
-        this.context = context;
         this.handler = handler;
     }
 
@@ -32,7 +30,7 @@ public class HttpTransfer extends AsyncTask<String, String, String>{
     }
 
     @Override
-    protected String doInBackground(String... messages) {
+    protected Integer doInBackground(String... messages) {
         try {
             URL url = new URL(messages[0]);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -54,17 +52,17 @@ public class HttpTransfer extends AsyncTask<String, String, String>{
                     result.append(response);
                     Log.i("INPUT", messages.toString());
                 }
-                return result.toString();
+                return StatusCode.SUCCESS;
             }
         }
         catch (Exception e){
             Log.d("ERROR : ", e.toString());
         }
-        return null;
+        return StatusCode.FAILED;
     }
 
     @Override
-    protected void onPostExecute(String result) {
-       handler.sendMessage(Message.obtain(handler,1));
+    protected void onPostExecute(Integer statusCode) {
+       handler.sendMessage(Message.obtain(handler,statusCode));
     }
 }
