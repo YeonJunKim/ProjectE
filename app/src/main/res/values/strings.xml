@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">UIDesign</string>
+
+    <string name="testURL">"http://192.241.221.155:8081/api/test"</string>
 </resources>

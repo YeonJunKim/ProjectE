@@ -12,10 +12,11 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class HttpTransfer extends AsyncTask<JSONObject, String, String>{
+public class HttpTransfer extends AsyncTask<String, String, String>{
     private Context context;
     private Handler handler;
 
@@ -31,26 +32,28 @@ public class HttpTransfer extends AsyncTask<JSONObject, String, String>{
     }
 
     @Override
-    protected String doInBackground(JSONObject... messages) {
+    protected String doInBackground(String... messages) {
         try {
-            URL url = new URL("http://10.0.2.2/test.php");
+            URL url = new URL(messages[0]);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-type", "x-www-form-urlencoded");
+            conn.setRequestProperty("Content-type", "application/json");
 
-            DataOutputStream dos = new DataOutputStream(conn.getOutputStream());
-            dos.writeBytes(messages.toString());
-            dos.flush();
-            dos.close();
+            OutputStream os = conn.getOutputStream();
+            Log.i("OUTPUT", messages[1]);
+            os.write(messages[1].getBytes("UTF-8"));
+            os.flush();
+            os.close();
 
             if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 InputStream is = conn.getInputStream();
                 BufferedReader buffer = new BufferedReader(new InputStreamReader(is));
                 String response;
                 StringBuilder result = new StringBuilder();
-                while((response = buffer.readLine()) != null)
+                while((response = buffer.readLine()) != null) {
                     result.append(response);
-
+                    Log.i("INPUT", messages.toString());
+                }
                 return result.toString();
             }
         }

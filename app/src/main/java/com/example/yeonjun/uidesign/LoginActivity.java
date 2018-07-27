@@ -65,7 +65,7 @@ public class LoginActivity extends AppCompatActivity {
                     JSONObject data = new JSONObject();
                     data.put("id", pwEditText.getText().toString());
                     data.put("password", pwEditText.getText().toString());
-                    new HttpTransfer(getApplicationContext(), mHandler).execute(data);
+                    new HttpTransfer(getApplicationContext(), mHandler).execute(getResources().getString(R.string.testURL),data.toString());
                 }
                 catch (Exception e) {
                     Log.d("ERROR", e.toString());
