@@ -16,10 +16,14 @@ public class AuthenticationActivity extends AppCompatActivity {
     Button submitButton;
     EditText codeEditText;
 
+    CharSequence previousActivity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authentication);
+
+        previousActivity = getIntent().getExtras().getString("name");
 
         verifyButton = (Button)findViewById(R.id.verifyButton);
         submitButton = (Button)findViewById(R.id.submitButton);
@@ -34,7 +38,7 @@ public class AuthenticationActivity extends AppCompatActivity {
                         return;
                     }
 
-                    // ask server if the code is correct
+                    // UVC - REQ : User Verification Request
                     // <--------------------------------
 
                     isVerified = true;
@@ -53,10 +57,24 @@ public class AuthenticationActivity extends AppCompatActivity {
                     return;
                 }
 
-                Intent intent = new Intent(
-                        getApplicationContext(), // 현재 화면의 제어권자
-                        ResetPasswordActivity.class); // 다음 넘어갈 클래스 지정
-                startActivity(intent); // 다음 화면으로 넘어간다
+                Intent intent;
+                if(previousActivity.toString().contentEquals("register")){
+                    intent = new Intent(
+                            getApplicationContext(), // 현재 화면의 제어권자
+                            LoginActivity.class); // 다음 넘어갈 클래스 지정
+
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                    startActivity(intent); // 다음 화면으로 넘어간다
+                }
+                else if(previousActivity.toString().contentEquals("findPassword")){
+                    intent = new Intent(
+                            getApplicationContext(), // 현재 화면의 제어권자
+                            ResetPasswordActivity.class); // 다음 넘어갈 클래스 지정
+
+                    startActivity(intent); // 다음 화면으로 넘어간다
+                }
             }
         });
     }
