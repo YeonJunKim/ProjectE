@@ -26,6 +26,8 @@ public class AuthenticationActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case StatusCode.SUCCESS:
+                    isVerified = true;
+                    MySingletone.getInstance().ShowToastMessage("Verify Succeed!", getApplicationContext());
                     break;
                 case StatusCode.FAILED:
                     break;
@@ -62,10 +64,6 @@ public class AuthenticationActivity extends AppCompatActivity {
                         Log.i("ERROR", e.toString());
                     }
 
-                    isVerified = true;
-                    MySingletone.getInstance().ShowToastMessage("Verify Succeed!", getApplicationContext());
-
-                    return;
                 }
             }
         });

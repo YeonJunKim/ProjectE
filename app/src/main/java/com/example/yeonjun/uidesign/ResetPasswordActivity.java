@@ -23,6 +23,11 @@ public class ResetPasswordActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case StatusCode.SUCCESS:
+                    MySingletone.getInstance().ShowToastMessage("password changed!", getApplicationContext());
+                    Intent intent = new Intent(
+                            getApplicationContext(), // 현재 화면의 제어권자
+                            LoginActivity.class); // 다음 넘어갈 클래스 지정
+                    startActivity(intent); // 다음 화면으로 넘어간다
                     break;
                 case StatusCode.FAILED:
                     break;
@@ -69,12 +74,6 @@ public class ResetPasswordActivity extends AppCompatActivity {
                     Log.i("ERROR", e.toString());
                 }
 
-                MySingletone.getInstance().ShowToastMessage("password changed!", getApplicationContext());
-
-                Intent intent = new Intent(
-                        getApplicationContext(), // 현재 화면의 제어권자
-                        LoginActivity.class); // 다음 넘어갈 클래스 지정
-                startActivity(intent); // 다음 화면으로 넘어간다
             }
         });
     }
