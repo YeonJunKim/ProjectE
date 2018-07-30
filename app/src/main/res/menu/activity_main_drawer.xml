@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/drowsyDriving"
+            android:icon="@drawable/ic_notifications_active_black_24dp"
+            android:title="Drowsy Driving Detection" />
+        <item
+            android:id="@+id/realTime"
+            android:icon="@drawable/ic_show_chart_gray_24dp"
+            android:title="Real-time Data" />
+        <item
+            android:id="@+id/mapView"
+            android:icon="@drawable/ic_location_on_gray_24dp"
+            android:title="Map View" />
+        <item
+            android:id="@+id/history"
+            android:icon="@drawable/ic_history_gray_24dp"
+            android:title="History" />
+    </group>
+
+    <item android:title="Account">
+        <menu>
+            <item
+                android:id="@+id/changePw"
+                android:icon="@drawable/ic_create_gray_24dp"
+                android:title="Change Password" />
+            <item
+                android:id="@+id/idCancellation"
+                android:icon="@drawable/ic_folder_shared_gray_24dp"
+                android:title="ID Cancellation" />
+            <item
+                android:id="@+id/logout"
+                android:icon="@drawable/ic_exit_to_app_gray_24dp"
+                android:title="Logout" />
+        </menu>
+    </item>
+
+</menu>

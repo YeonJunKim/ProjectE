@@ -61,6 +61,7 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
 
+
                 // check id, password with the server
                 // <-----------------------------------------
                 try {
@@ -76,6 +77,10 @@ public class LoginActivity extends AppCompatActivity {
 
                 MySingletone.getInstance().ShowToastMessage("Login Success!", getApplicationContext());
                 //Go to the first page of the app
+                Intent intent = new Intent(
+                        getApplicationContext(),
+                        MainActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -83,9 +88,9 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {    // on Register button click
                 Intent intent = new Intent(
-                        getApplicationContext(), // 현재 화면의 제어권자
-                        RegisterActivity.class); // 다음 넘어갈 클래스 지정
-                startActivity(intent); // 다음 화면으로 넘어간다
+                        getApplicationContext(),
+                        RegisterActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -93,9 +98,9 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {    // on Forgot Password? button click
                 Intent intent = new Intent(
-                        getApplicationContext(), // 현재 화면의 제어권자
-                        FindPasswordActivity.class); // 다음 넘어갈 클래스 지정
-                startActivity(intent); // 다음 화면으로 넘어간다
+                        getApplicationContext(),
+                        FindPasswordActivity.class);
+                startActivity(intent);
             }
         });
     }

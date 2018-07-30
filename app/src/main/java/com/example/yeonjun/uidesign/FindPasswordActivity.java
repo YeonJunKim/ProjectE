@@ -26,10 +26,10 @@ public class FindPasswordActivity extends AppCompatActivity {
             switch (msg.what){
                 case StatusCode.SUCCESS:
                     Intent intent = new Intent(
-                            getApplicationContext(), // 현재 화면의 제어권자
-                            AuthenticationActivity.class); // 다음 넘어갈 클래스 지정
+                            getApplicationContext(),
+                            AuthenticationActivity.class);
                     intent.putExtra("name", "findPassword");
-                    startActivity(intent); // 다음 화면으로 넘어간다
+                    startActivity(intent);
                     break;
                 case StatusCode.FAILED:
                     break;
