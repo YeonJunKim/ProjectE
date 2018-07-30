@@ -32,6 +32,7 @@ public class FindPasswordActivity extends AppCompatActivity {
                     startActivity(intent); // 다음 화면으로 넘어간다
                     break;
                 case StatusCode.FAILED:
+                    MySingletone.getInstance().ShowToastMessage("Error", getApplicationContext());
                     break;
             }
         }

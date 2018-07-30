@@ -2,8 +2,11 @@
     <string name="app_name">UIDesign</string>
 
     <string name="testURL">"http://192.241.221.155:8081/api/test"</string>
-    <string name="url_sgu_drq">"http://192.241.221.155:8081/api/test"</string>
-    <string name="url_sign_in">"http://192.241.221.155:8081/api/test"</string>
-    <string name="url_forgot_password">"http://192.241.221.155:8081/api/test"</string>
+
+    <string name="duplication_check">http://192.241.221.155:8081/api/user/check/</string>
+    <string name="insert_user_info">http://192.241.221.155:8081/api/user/insert</string>
+    <string name="sign_in">http://192.241.221.155:8081/api/user/login/</string>
+    <string name="change_password">http://192.241.221.155:8081/api/user/changepw/</string>
+    <string name="id_cancellation">http://192.241.221.155:8081/api/user/delete/</string>
 
 </resources>

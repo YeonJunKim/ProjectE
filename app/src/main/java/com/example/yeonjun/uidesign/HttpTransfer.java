@@ -18,10 +18,14 @@ import java.net.URL;
 
 public class HttpTransfer extends AsyncTask<String, String, Integer>{
     private Handler handler;
+    private URL url;
 
-    public HttpTransfer(Handler handler) {
-        super();
-        this.handler = handler;
+    private static HttpTransfer httpTransfer = new HttpTransfer();
+
+    public HttpTransfer() {    }
+
+    public static HttpTransfer getHttpTransfer(){
+        return httpTransfer;
     }
 
     @Override
@@ -65,4 +69,5 @@ public class HttpTransfer extends AsyncTask<String, String, Integer>{
     protected void onPostExecute(Integer statusCode) {
        handler.sendMessage(Message.obtain(handler,statusCode));
     }
+
 }

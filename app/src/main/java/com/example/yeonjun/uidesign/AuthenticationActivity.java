@@ -31,6 +31,7 @@ public class AuthenticationActivity extends AppCompatActivity {
                     MySingletone.getInstance().ShowToastMessage("Verify Succeed!", getApplicationContext());
                     break;
                 case StatusCode.FAILED:
+                    MySingletone.getInstance().ShowToastMessage("Error", getApplicationContext());
                     break;
             }
         }

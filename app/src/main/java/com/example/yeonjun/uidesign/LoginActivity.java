@@ -26,10 +26,10 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what){
-                case 1:
+                case StatusCode.SUCCESS:
                     MySingletone.getInstance().ShowToastMessage("Success", getApplicationContext());
                     break;
-                default:
+                case StatusCode.FAILED:
                     MySingletone.getInstance().ShowToastMessage("Error", getApplicationContext());
                     break;
             }
