@@ -56,6 +56,31 @@ public class ChangePasswordActivity extends AppCompatActivity {
         });
 
 
+
+        currentPwEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable arg0) {
+                // 입력이 끝났을 때
+                newPwValid = false;
+                if(currentPwEditText.getText().toString().contentEquals(newPwEditText.getText())) {
+                    newPwEditText.setError("new password should be different");
+                }
+                else {
+                    newPwEditText.setError(null);
+                    newPwValid = true;
+                }
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // 입력하기 전에
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // 입력되는 텍스트에 변화가 있을 때
+            }
+        });
+
+
         newPwEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable arg0) {
@@ -69,6 +94,9 @@ public class ChangePasswordActivity extends AppCompatActivity {
                 }
                 else if(newPwEditText.getText().length() > 16) {
                     newPwEditText.setError("too long");
+                }
+                else if(currentPwEditText.getText().toString().contentEquals(newPwEditText.getText())) {
+                    newPwEditText.setError("new password should be different");
                 }
                 else {
                     newPwEditText.setError(null);
