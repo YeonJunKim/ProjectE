@@ -67,7 +67,7 @@ public class HttpTransfer extends AsyncTask<String, String, Integer>{
 
     @Override
     protected void onPostExecute(Integer statusCode) {
-       handler.sendMessage(Message.obtain(handler,statusCode));
+       handler.sendMessage(Message.obtain(handler, StatusCode.SUCCESS));
     }
 
 }

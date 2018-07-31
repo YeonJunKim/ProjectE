@@ -20,7 +20,7 @@ public class AuthenticationActivity extends AppCompatActivity {
     Button verifyButton;
     Button submitButton;
     EditText codeEditText;
-    CharSequence previousActivity;
+    String previousActivity;
   
     private Handler mHandler = new Handler(){
         @Override
@@ -81,22 +81,35 @@ public class AuthenticationActivity extends AppCompatActivity {
                 }
 
                 Intent intent;
-                if(previousActivity.toString().contentEquals("register")){
+                if(previousActivity.contentEquals("register")){
+                    MySingletone.getInstance().ShowToastMessage("registration success!", getApplicationContext());
+
                     intent = new Intent(
-                            getApplicationContext(), // 현재 화면의 제어권자
-                            LoginActivity.class); // 다음 넘어갈 클래스 지정
+                            getApplicationContext(),
+                            LoginActivity.class);
 
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-                    startActivity(intent); // 다음 화면으로 넘어간다
+                    startActivity(intent);
                 }
-                else if(previousActivity.toString().contentEquals("findPassword")){
+                else if(previousActivity.contentEquals("idCancellation")){
+                    MySingletone.getInstance().ShowToastMessage("id cancellation success!", getApplicationContext());
                     intent = new Intent(
-                            getApplicationContext(), // 현재 화면의 제어권자
-                            ResetPasswordActivity.class); // 다음 넘어갈 클래스 지정
+                            getApplicationContext(),
+                            LoginActivity.class);
 
-                    startActivity(intent); // 다음 화면으로 넘어간다
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                    startActivity(intent);
+                }
+                else if(previousActivity.contentEquals("findPassword")){
+                    intent = new Intent(
+                            getApplicationContext(),
+                            ResetPasswordActivity.class);
+
+                    startActivity(intent);
                 }
             }
         });

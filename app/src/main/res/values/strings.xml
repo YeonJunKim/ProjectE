@@ -2,6 +2,16 @@
     <string name="app_name">UIDesign</string>
 
     <string name="testURL">"http://192.241.221.155:8081/api/test"</string>
+    <string name="url_sgu_drq">"http://192.241.221.155:8081/api/test"</string>
+    <string name="url_sign_in">"http://192.241.221.155:8081/api/test"</string>
+    <string name="url_forgot_password">"http://192.241.221.155:8081/api/test"</string>
+    <string name="title_activity_main">Drowsy Driving Detection</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
 
     <string name="duplication_check">http://192.241.221.155:8081/api/user/check/</string>
     <string name="insert_user_info">http://192.241.221.155:8081/api/user/insert</string>
