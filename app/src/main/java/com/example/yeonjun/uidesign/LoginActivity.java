@@ -2,6 +2,7 @@ package com.example.yeonjun.uidesign;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
@@ -22,15 +23,23 @@ public class LoginActivity extends AppCompatActivity {
     EditText idEditText;
     EditText pwEditText;
 
+    SharedPreferences sp;
+
     Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case StatusCode.SUCCESS:
-                    MySingletone.getInstance().ShowToastMessage("Success", getApplicationContext());
+                    MySingletone.getInstance().ShowToastMessage("Login Success!", getApplicationContext());
+                    Log.i("JADE-TOKEN ", sp.getString("token", null));
+                    //Go to the first page of the app
+                    Intent intent = new Intent(
+                            getApplicationContext(),
+                            MainActivity.class);
+                    startActivity(intent);
                     break;
                 case StatusCode.FAILED:
-                    MySingletone.getInstance().ShowToastMessage("Error", getApplicationContext());
+                    MySingletone.getInstance().ShowToastMessage("Login Failed!", getApplicationContext());
                     break;
             }
         }
@@ -46,6 +55,8 @@ public class LoginActivity extends AppCompatActivity {
         findPwButton = (Button)findViewById(R.id.findPwButton);
         idEditText = findViewById(R.id.idEditText);
         pwEditText = findViewById(R.id.pwEditText);
+
+        sp = getSharedPreferences(getString(R.string.sh_pref), MODE_PRIVATE);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,23 +75,8 @@ public class LoginActivity extends AppCompatActivity {
 
                 // check id, password with the server
                 // <-----------------------------------------
-                try {
-                    JSONObject data = new JSONObject();
-                    data.put("id", pwEditText.getText().toString());
-                    data.put("password", pwEditText.getText().toString());
-                    new HttpTransfer(mHandler).execute(getString(R.string.testURL),data.toString());
-                }
-                catch (Exception e) {
-                    Log.d("ERROR", e.toString());
-                }
+                new SignInTask(mHandler, sp).execute(idEditText.getText().toString(), pwEditText.getText().toString());
 
-
-                MySingletone.getInstance().ShowToastMessage("Login Success!", getApplicationContext());
-                //Go to the first page of the app
-                Intent intent = new Intent(
-                        getApplicationContext(),
-                        MainActivity.class);
-                startActivity(intent);
             }
         });
 

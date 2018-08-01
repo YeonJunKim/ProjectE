@@ -62,7 +62,7 @@ public class AuthenticationActivity extends AppCompatActivity {
                     try {
                         JSONObject data = new JSONObject();
                         data.put("code", codeEditText.getText().toString());
-                        new HttpTransfer(mHandler).execute(getString(R.string.testURL), data.toString());
+//                        new HttpTransfer(mHandler).execute(getString(R.string.testURL), data.toString());
                     }
                     catch (Exception e){
                         Log.i("ERROR", e.toString());

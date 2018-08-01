@@ -75,7 +75,7 @@ public class FindPasswordActivity extends AppCompatActivity {
                     JSONObject data = new JSONObject();
                     data.put("id", idEditText.getText().toString());
                     data.put("email", emailEditText.getText().toString());
-                    new HttpTransfer(mHandler).execute(getString(R.string.testURL), data.toString());
+                    //new HttpTransfer(mHandler).execute(getString(R.string.testURL), data.toString());
                 }
                 catch (Exception e){
                     Log.i("ERROR", e.toString());

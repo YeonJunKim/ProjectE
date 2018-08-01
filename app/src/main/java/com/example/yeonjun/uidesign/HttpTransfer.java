@@ -22,10 +22,18 @@ public class HttpTransfer extends AsyncTask<String, String, Integer>{
 
     private static HttpTransfer httpTransfer = new HttpTransfer();
 
-    public HttpTransfer() {    }
+    private HttpTransfer() {    }
 
     public static HttpTransfer getHttpTransfer(){
         return httpTransfer;
+    }
+
+    public void setHandler(Handler handler) {
+        this.handler = handler;
+    }
+
+    public void setUrl(URL url) {
+        this.url = url;
     }
 
     @Override
@@ -68,6 +76,44 @@ public class HttpTransfer extends AsyncTask<String, String, Integer>{
     @Override
     protected void onPostExecute(Integer statusCode) {
        handler.sendMessage(Message.obtain(handler, StatusCode.SUCCESS));
+    }
+
+    public void signIn(Handler handler, String path, String id, String pw){
+        final Handler mHandler = handler;
+        final String addr = path + id + "/" + pw;
+        Thread th = new Thread(){
+            @Override
+            public void run() {
+                try {
+                    url = new URL(addr);
+                    HttpURLConnection huc = (HttpURLConnection)url.openConnection();
+                    huc.setRequestMethod("GET");
+                    huc.connect();
+
+                    if(huc.getResponseCode() == HttpURLConnection.HTTP_OK){
+                        InputStream is = huc.getInputStream();
+                        BufferedReader buffer = new BufferedReader(new InputStreamReader(is));
+                        String input;
+                        StringBuilder sb = new StringBuilder();
+                        while((input = buffer.readLine()) != null){
+                            sb.append(input);
+                            Log.i("RESPONSE", input);
+                        }
+                        JSONObject jobj = new JSONObject(sb.toString());
+                        Log.i("RESPONSE : correct", jobj.get("correct").toString());
+                        if(jobj.get("correct").toString().equals("true")){
+                            mHandler.sendMessage(Message.obtain(mHandler, StatusCode.SUCCESS));
+                        }
+                        else{
+                            mHandler.sendMessage(Message.obtain(mHandler, StatusCode.FAILED));
+                        }
+                    }
+                } catch (Exception e){
+                    Log.i("Error", e.toString());
+                }
+            }
+        };
+        th.run();
     }
 
 }
