@@ -229,7 +229,7 @@ class VerficationTask extends Tasks{
                 if(response.getBoolean("success")) {
                     if (typeVerification == StatusCode.FORGOT_PW_VERIFY) {
                         SharedPreferences.Editor editor = sp.edit();
-                        editor.putString(response.getString("token"), null);
+                        editor.putString("token", response.getString("token"));
                         editor.commit();
                     }
                     return StatusCode.SUCCESS;
