@@ -1,10 +1,16 @@
 package com.example.yeonjun.uidesign;
 
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,6 +25,18 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     Toolbar toolbar;
+    SectionPageAdapter mSectionPageAdapter;
+    ViewPager mViewPager;
+
+    private void SetupViewPager(ViewPager viewPager){
+        SectionPageAdapter adapter = new SectionPageAdapter(getSupportFragmentManager());
+        adapter.AddFragment(new DrowsyFragment(), "DrowsyFragment");
+        adapter.AddFragment(new RealTimeFragment(), "RealTimeFragment");
+        adapter.AddFragment(new MapFragment(), "MapFragment");
+        adapter.AddFragment(new HistoryFragment(), "HistoryFragment");
+        viewPager.setAdapter(adapter);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,12 +53,15 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        mSectionPageAdapter = new SectionPageAdapter(getSupportFragmentManager());
+        mViewPager = (ViewPager)findViewById(R.id.viewPager);
+        SetupViewPager(mViewPager);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        toolbar.setTitle("Real-time data");
     }
 
     @Override
@@ -61,20 +82,22 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.drowsyDriving) {
             toolbar.setTitle("Drowsy Driving Detection");
+            mViewPager.setCurrentItem(0);
         } else if (id == R.id.realTime) {
-            toolbar.setTitle("Real-time data");
+            toolbar.setTitle("Real Time Data View");
+            mViewPager.setCurrentItem(1);
         } else if (id == R.id.mapView) {
-            toolbar.setTitle("Map view");
+            toolbar.setTitle("Map View");
+            mViewPager.setCurrentItem(2);
         } else if (id == R.id.history) {
-            toolbar.setTitle("History data");
+            toolbar.setTitle("History Data View");
+            mViewPager.setCurrentItem(3);
         } else if (id == R.id.changePw) {
-            //toolbar.setTitle("Change Password");
             Intent intent = new Intent(
                     getApplicationContext(),
                     ChangePasswordActivity.class);
             startActivity(intent);
         } else if (id == R.id.idCancellation) {
-            //toolbar.setTitle("ID Cancellation");
             Intent intent = new Intent(
                     getApplicationContext(),
                     IdCancellationActivity.class);
@@ -91,7 +114,6 @@ public class MainActivity extends AppCompatActivity
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }
-
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

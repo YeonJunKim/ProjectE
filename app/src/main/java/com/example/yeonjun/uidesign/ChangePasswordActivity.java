@@ -6,6 +6,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,6 +18,10 @@ public class ChangePasswordActivity extends AppCompatActivity {
     EditText newPwEditText;
     EditText confirmPwEditText;
     Button submitButton;
+
+    boolean newPwValid = false;
+    boolean confirmPwValid = false;
+
 
 
     SharedPreferences sp;
@@ -55,33 +61,8 @@ public class ChangePasswordActivity extends AppCompatActivity {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {    // on Submit button click
-                // 1. check if current pw line is empty
-                if(currentPwEditText.getText().length() == 0) {
-                    MySingletone.getInstance().ShowToastMessage("current pw is empty", getApplicationContext());
-                    return;
-                }
-
-                // 2. check if new pw line is empty
-                if(newPwEditText.getText().length() == 0) {
-                    MySingletone.getInstance().ShowToastMessage("new pw is empty", getApplicationContext());
-                    return;
-                }
-
-                // 3. check if confirm pw line is empty
-                if(confirmPwEditText.getText().length() == 0) {
-                    MySingletone.getInstance().ShowToastMessage("confirm pw is empty", getApplicationContext());
-                    return;
-                }
-
-                // 4. check if current pw and new pw match
-                if(currentPwEditText.getText().toString().contentEquals(newPwEditText.getText())){
-                    MySingletone.getInstance().ShowToastMessage("new pw needs to be different!", getApplicationContext());
-                    return;
-                }
-
-                // 5. check if new pw and confirm pw match
-                if(newPwEditText.getText().toString().contentEquals(confirmPwEditText.getText()) == false){
-                    MySingletone.getInstance().ShowToastMessage("confirm password does not match!", getApplicationContext());
+                if(!newPwValid || !confirmPwValid) {
+                    MySingletone.getInstance().ShowToastMessage("new password is not valid", getApplicationContext());
                     return;
                 }
 
@@ -91,6 +72,96 @@ public class ChangePasswordActivity extends AppCompatActivity {
                 new ChangePasswordTask(mHandler, sp).execute(currentPwEditText.getText().toString(),
                                                              newPwEditText.getText().toString()     );
 
+            }
+        });
+
+
+
+        currentPwEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable arg0) {
+                // 입력이 끝났을 때
+                newPwValid = false;
+                if(currentPwEditText.getText().toString().contentEquals(newPwEditText.getText())) {
+                    newPwEditText.setError("new password should be different");
+                }
+                else {
+                    newPwEditText.setError(null);
+                    newPwValid = true;
+                }
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // 입력하기 전에
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // 입력되는 텍스트에 변화가 있을 때
+            }
+        });
+
+
+        newPwEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable arg0) {
+                // 입력이 끝났을 때
+                newPwValid = false;
+                if(!MySingletone.getInstance().isNoSpaceBar(newPwEditText.getText())) {
+                    newPwEditText.setError("spaces not allowed");
+                }
+                else if(newPwEditText.getText().length() < 6) {
+                    newPwEditText.setError("at least 6 letters");
+                }
+                else if(newPwEditText.getText().length() > 16) {
+                    newPwEditText.setError("too long");
+                }
+                else if(currentPwEditText.getText().toString().contentEquals(newPwEditText.getText())) {
+                    newPwEditText.setError("new password should be different");
+                }
+                else {
+                    newPwEditText.setError(null);
+                    newPwValid = true;
+                }
+
+                confirmPwValid = false;
+                if(confirmPwEditText.getText().toString().contentEquals(newPwEditText.getText()) == false) {
+                    confirmPwEditText.setError("password is different");
+                }
+                else {
+                    confirmPwEditText.setError(null);
+                    confirmPwValid = true;
+                }
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // 입력하기 전에
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // 입력되는 텍스트에 변화가 있을 때
+            }
+        });
+
+        confirmPwEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable arg0) {
+                // 입력이 끝났을 때
+                confirmPwValid = false;
+                if(confirmPwEditText.getText().toString().contentEquals(newPwEditText.getText()) == false) {
+                    confirmPwEditText.setError("password is different");
+                }
+                else {
+                    confirmPwEditText.setError(null);
+                    confirmPwValid = true;
+                }
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // 입력하기 전에
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // 입력되는 텍스트에 변화가 있을 때
             }
         });
     }

@@ -20,4 +20,7 @@
     <string name="change_password">http://192.241.221.155:8081/api/user/changepw/</string>
     <string name="id_cancellation">http://192.241.221.155:8081/api/user/delete/</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>
