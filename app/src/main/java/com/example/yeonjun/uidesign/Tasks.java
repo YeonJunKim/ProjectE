@@ -387,12 +387,55 @@ class ResetPasswordTask extends Tasks{
 
                 JSONObject response = new JSONObject(sb.toString());
                 if(response.getBoolean("success")){
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.remove("token");
+                    editor.commit();
                     return StatusCode.SUCCESS;
                 }
                 else
                     return StatusCode.FAILED;
             }
         } catch (Exception e){
+            Log.i("JADE-ERROR", e.toString());
+        }
+        return null;
+    }
+
+    @Override
+    protected void onPostExecute(Integer result) {
+        super.onPostExecute(result);
+    }
+}
+
+class CancellationTask extends Tasks{
+    public CancellationTask(Handler handler) {
+        super(handler);
+    }
+
+    @Override
+    protected Integer doInBackground(String... strings) {
+        try{
+            URL url = new URL("http://192.241.221.155:8081/api/email/");
+            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+
+            if(conn.getResponseCode() == HttpURLConnection.HTTP_OK){
+                InputStream is = conn.getInputStream();
+                BufferedReader buffer = new BufferedReader(new InputStreamReader(is));
+                String input = null;
+                StringBuilder sb = new StringBuilder();
+                while((input = buffer.readLine()) != null){
+                    Log.i("JADE-INPUT", input);
+                    sb.append(input);
+                }
+
+                JSONObject response = new JSONObject(sb.toString());
+                if(response.getBoolean("success"))
+                    return StatusCode.SUCCESS;
+                else
+                    return StatusCode.FAILED;
+            }
+
+        }catch (Exception e){
             Log.i("JADE-ERROR", e.toString());
         }
         return null;

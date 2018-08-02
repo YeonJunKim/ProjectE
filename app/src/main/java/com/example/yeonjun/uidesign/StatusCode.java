@@ -10,6 +10,7 @@ public class StatusCode {
 
     public static final int REGISTER_VERIFY = 11;
     public static final int FORGOT_PW_VERIFY = 12;
+    public static final int CANCEL_ID_VERIFY = 13;
 
     public static final String TYPE_ID = "id";
     public static final String TYPE_EMAIL = "email";
