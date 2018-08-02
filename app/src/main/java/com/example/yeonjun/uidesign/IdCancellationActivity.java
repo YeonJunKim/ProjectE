@@ -1,6 +1,8 @@
 package com.example.yeonjun.uidesign;
 
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +14,18 @@ public class IdCancellationActivity extends AppCompatActivity {
     EditText emailEditText;
     EditText pwEditText;
     Button submitButton;
+
+    Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case StatusCode.SUCCESS:
+                    break;
+                case StatusCode.FAILED:
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -1,6 +1,9 @@
 package com.example.yeonjun.uidesign;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -20,6 +23,29 @@ public class ChangePasswordActivity extends AppCompatActivity {
     boolean confirmPwValid = false;
 
 
+
+    SharedPreferences sp;
+    Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case StatusCode.SUCCESS:
+                    MySingletone.getInstance().ShowToastMessage("password changed!", getApplicationContext());
+                    // maybe re login because pw has changed?
+                    Intent intent = new Intent(
+                            getApplicationContext(),
+                            LoginActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    break;
+                case StatusCode.FAILED:
+                    MySingletone.getInstance().ShowToastMessage("incorrect old password", getApplicationContext());
+                    break;
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +56,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
         confirmPwEditText = findViewById(R.id.confirmPwEditText);
         submitButton = findViewById(R.id.submitButton);
 
+        sp = getSharedPreferences(getString(R.string.sh_pref), MODE_PRIVATE);
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -42,16 +69,9 @@ public class ChangePasswordActivity extends AppCompatActivity {
 
                 // CUP-REQ : Change User Password Request
                 // <------------------------------------------
+                new ChangePasswordTask(mHandler, sp).execute(currentPwEditText.getText().toString(),
+                                                             newPwEditText.getText().toString()     );
 
-
-                MySingletone.getInstance().ShowToastMessage("password changed!", getApplicationContext());
-                // maybe re login because pw has changed?
-                Intent intent = new Intent(
-                        getApplicationContext(),
-                        LoginActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
             }
         });
 

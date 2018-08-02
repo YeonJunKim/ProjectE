@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -102,6 +103,10 @@ public class MainActivity extends AppCompatActivity
                     IdCancellationActivity.class);
             startActivity(intent);
         } else if (id == R.id.logout) {
+            SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.sh_pref), MODE_PRIVATE).edit();
+            editor.remove("token");
+            editor.commit();
+
             Intent intent = new Intent(
                     getApplicationContext(),
                     LoginActivity.class);
