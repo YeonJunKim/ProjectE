@@ -1,6 +1,7 @@
 package com.example.yeonjun.uidesign;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -68,15 +69,12 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
                 // ask server if the code is correct
                 // <--------------------------------
-                try {
-                    JSONObject data = new JSONObject();
-                    data.put("password", pwEditText.getText().toString());
-//                    new HttpTransfer(mHandler).execute(getString(R.string.testURL), data.toString());
-                }
-                catch (Exception e){
-                    Log.i("ERROR", e.toString());
-                }
+                new ResetPasswordTask(mHandler, getSharedPreferences(getString(R.string.sh_pref), MODE_PRIVATE))
+                        .execute(pwEditText.getText().toString());
+
             }
         });
     }
 }
+
+

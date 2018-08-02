@@ -29,6 +29,7 @@ public class FindPasswordActivity extends AppCompatActivity {
                             getApplicationContext(),
                             AuthenticationActivity.class);
                     intent.putExtra("name", "findPassword");
+                    intent.putExtra("email", emailEditText.getText().toString());
                     startActivity(intent);
                     break;
                 case StatusCode.FAILED:
@@ -71,15 +72,7 @@ public class FindPasswordActivity extends AppCompatActivity {
 
                 // ask server if the "id and email" exists and matches
                 // <-----------------------------------
-                try {
-                    JSONObject data = new JSONObject();
-                    data.put("id", idEditText.getText().toString());
-                    data.put("email", emailEditText.getText().toString());
-                    //new HttpTransfer(mHandler).execute(getString(R.string.testURL), data.toString());
-                }
-                catch (Exception e){
-                    Log.i("ERROR", e.toString());
-                }
+                new FindPasswordTask(mHandler).execute(idEditText.getText().toString(), emailEditText.getText().toString());
             }
         });
     }

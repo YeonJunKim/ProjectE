@@ -34,9 +34,11 @@ public class RegisterActivity extends AppCompatActivity {
                             getApplicationContext(),
                             AuthenticationActivity.class);
                     intent.putExtra("name", "register");
+                    intent.putExtra("email", emailEditText.getText().toString());
                     startActivity(intent);
                     break;
                 case StatusCode.FAILED:
+                    MySingletone.getInstance().ShowToastMessage("E-mail already registered!", getApplicationContext());
                     break;
                 case StatusCode.NOT_DUPLICATE_ID:
                     isVerified = true;

@@ -6,6 +6,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -31,7 +33,7 @@ public class AuthenticationActivity extends AppCompatActivity {
                     MySingletone.getInstance().ShowToastMessage("Verify Succeed!", getApplicationContext());
                     break;
                 case StatusCode.FAILED:
-                    MySingletone.getInstance().ShowToastMessage("Error", getApplicationContext());
+                    MySingletone.getInstance().ShowToastMessage("Incorrect verification code", getApplicationContext());
                     break;
             }
         }
@@ -48,6 +50,23 @@ public class AuthenticationActivity extends AppCompatActivity {
         submitButton = (Button)findViewById(R.id.submitButton);
         codeEditText = findViewById(R.id.codeEditText);
 
+        codeEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                isVerified = false;
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
         verifyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {    // on Verify button click
@@ -59,15 +78,12 @@ public class AuthenticationActivity extends AppCompatActivity {
 
                     // UVC - REQ : User Verification Request
                     // <--------------------------------
-                    try {
-                        JSONObject data = new JSONObject();
-                        data.put("code", codeEditText.getText().toString());
-//                        new HttpTransfer(mHandler).execute(getString(R.string.testURL), data.toString());
-                    }
-                    catch (Exception e){
-                        Log.i("ERROR", e.toString());
-                    }
-
+                    if(previousActivity.contentEquals("findPassword"))
+                        new VerficationTask(mHandler, getSharedPreferences(getString(R.string.sh_pref), MODE_PRIVATE), StatusCode.FORGOT_PW_VERIFY)
+                                .execute(getIntent().getStringExtra("email"), codeEditText.getText().toString());
+                    else if(previousActivity.contentEquals("register"))
+                        new VerficationTask(mHandler, getSharedPreferences(getString(R.string.sh_pref), MODE_PRIVATE), StatusCode.REGISTER_VERIFY)
+                                .execute(getIntent().getStringExtra("email"), codeEditText.getText().toString());
                 }
             }
         });
