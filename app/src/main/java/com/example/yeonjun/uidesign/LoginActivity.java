@@ -71,12 +71,9 @@ public class LoginActivity extends AppCompatActivity {
                     MySingletone.getInstance().ShowToastMessage("Password is empty", getApplicationContext());
                     return;
                 }
-
-
                 // check id, password with the server
                 // <-----------------------------------------
                 new SignInTask(mHandler, sp).execute(idEditText.getText().toString(), pwEditText.getText().toString());
-
             }
         });
 

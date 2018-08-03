@@ -2,7 +2,6 @@ package com.example.yeonjun.uidesign;
 
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -206,11 +205,14 @@ class VerficationTask extends Tasks{
         try{
             String path = "http://192.241.221.155:8081/api/email/";
             if(typeVerification == StatusCode.REGISTER_VERIFY)
-                path += "verify/";
+                path = path + "verify/" + strings[0] + "/" + strings[1];
             else if(typeVerification == StatusCode.FORGOT_PW_VERIFY)
-                path += "verifyforforgottenpw/";
+                path = path + "verifyforforgottenpw/" + strings[0] + "/" + strings[1];
+            else if(typeVerification == StatusCode.CANCEL_ID_VERIFY)
+                path = path + "verifyforidcancellation/" + strings[0] + "/" + strings[1]
+                        + "/" + sp.getString("token", null);
 
-            URL url = new URL(path + strings[0] + "/" + strings[1]);
+            URL url = new URL(path);
             HttpURLConnection conn = (HttpURLConnection)url.openConnection();
             conn.setRequestMethod("GET");
 
@@ -230,6 +232,11 @@ class VerficationTask extends Tasks{
                     if (typeVerification == StatusCode.FORGOT_PW_VERIFY) {
                         SharedPreferences.Editor editor = sp.edit();
                         editor.putString("token", response.getString("token"));
+                        editor.commit();
+                    }
+                    else if(typeVerification == StatusCode.CANCEL_ID_VERIFY){
+                        SharedPreferences.Editor editor = sp.edit();
+                        editor.remove("token");
                         editor.commit();
                     }
                     return StatusCode.SUCCESS;
@@ -408,15 +415,27 @@ class ResetPasswordTask extends Tasks{
 }
 
 class CancellationTask extends Tasks{
-    public CancellationTask(Handler handler) {
-        super(handler);
+    public CancellationTask(Handler handler, SharedPreferences sp) {
+        super(handler, sp);
     }
 
     @Override
     protected Integer doInBackground(String... strings) {
         try{
-            URL url = new URL("http://192.241.221.155:8081/api/email/");
+            URL url = new URL("http://192.241.221.155:8081/api/email/sendforidcancellation/"
+                    + sp.getString("token", null));
             HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-type", "application/json");
+
+            JSONObject data = new JSONObject();
+            data.put("email", strings[0]);
+            data.put("password", strings[1]);
+
+            OutputStream os = conn.getOutputStream();
+            os.write(data.toString().getBytes("UTF-8"));
+            os.flush();
+            os.close();
 
             if(conn.getResponseCode() == HttpURLConnection.HTTP_OK){
                 InputStream is = conn.getInputStream();
