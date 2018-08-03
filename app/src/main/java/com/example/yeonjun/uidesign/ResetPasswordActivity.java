@@ -28,6 +28,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
     private Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
+            MySingletone.getInstance().HideProgressBar();
             switch (msg.what){
                 case StatusCode.SUCCESS:
                     MySingletone.getInstance().ShowToastMessage("password changed!", getApplicationContext());
@@ -65,6 +66,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
                 // ask server if the code is correct
                 // <--------------------------------
+                MySingletone.getInstance().ShowProgressBar(ResetPasswordActivity.this);
                 new ResetPasswordTask(mHandler, getSharedPreferences(getString(R.string.sh_pref), MODE_PRIVATE))
                         .execute(pwEditText.getText().toString());
 

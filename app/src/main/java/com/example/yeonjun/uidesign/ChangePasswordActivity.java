@@ -28,6 +28,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
     Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
+            MySingletone.getInstance().HideProgressBar();
             switch (msg.what){
                 case StatusCode.SUCCESS:
                     MySingletone.getInstance().ShowToastMessage("password changed!", getApplicationContext());
@@ -69,6 +70,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
 
                 // CUP-REQ : Change User Password Request
                 // <------------------------------------------
+                MySingletone.getInstance().ShowProgressBar(ChangePasswordActivity.this);
                 new ChangePasswordTask(mHandler, sp).execute(currentPwEditText.getText().toString(),
                                                              newPwEditText.getText().toString()     );
 

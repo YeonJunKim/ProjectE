@@ -37,6 +37,7 @@ public class RegisterActivity extends AppCompatActivity {
     private Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
+            MySingletone.getInstance().HideProgressBar();
             switch (msg.what){
                 case StatusCode.SUCCESS:
                     Intent intent = new Intent(
@@ -93,6 +94,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                     // SGU - DRQ : id duplication Check Request
                     // <--------------------------------
+                    MySingletone.getInstance().ShowProgressBar(RegisterActivity.this);
                     new CheckDuplicationTask(mHandler).execute(StatusCode.TYPE_ID, idEditText.getText().toString());
 
 
@@ -141,6 +143,7 @@ public class RegisterActivity extends AppCompatActivity {
                 // <-----------------------------------------
 
                 // <--------------------------------
+                MySingletone.getInstance().ShowProgressBar(RegisterActivity.this);
                 new SignUpTask(mHandler).execute(idEditText.getText().toString(),
                                                  pwEditText.getText().toString(),
                                                  emailEditText.getText().toString(),

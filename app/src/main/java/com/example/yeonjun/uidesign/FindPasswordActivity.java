@@ -23,6 +23,7 @@ public class FindPasswordActivity extends AppCompatActivity {
     private Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
+            MySingletone.getInstance().HideProgressBar();
             switch (msg.what){
                 case StatusCode.SUCCESS:
                     Intent intent = new Intent(
@@ -72,6 +73,7 @@ public class FindPasswordActivity extends AppCompatActivity {
 
                 // ask server if the "id and email" exists and matches
                 // <-----------------------------------
+                MySingletone.getInstance().ShowProgressBar(FindPasswordActivity.this);
                 new FindPasswordTask(mHandler).execute(idEditText.getText().toString(), emailEditText.getText().toString());
             }
         });

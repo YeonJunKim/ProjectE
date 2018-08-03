@@ -27,6 +27,7 @@ public class AuthenticationActivity extends AppCompatActivity {
     private Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
+            MySingletone.getInstance().HideProgressBar();
             switch (msg.what){
                 case StatusCode.SUCCESS:
                     isVerified = true;
@@ -78,6 +79,7 @@ public class AuthenticationActivity extends AppCompatActivity {
 
                     // UVC - REQ : User Verification Request
                     // <--------------------------------
+                    MySingletone.getInstance().ShowProgressBar(AuthenticationActivity.this);
                     if(previousActivity.contentEquals("findPassword"))
                         new VerficationTask(mHandler, getSharedPreferences(getString(R.string.sh_pref), MODE_PRIVATE), StatusCode.FORGOT_PW_VERIFY)
                                 .execute(getIntent().getStringExtra("email"), codeEditText.getText().toString());

@@ -1,17 +1,35 @@
 package com.example.yeonjun.uidesign;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
 
 public class MySingletone {
     private static final MySingletone ourInstance = new MySingletone();
 
+    ProgressDialog dialog;
+
     public static MySingletone getInstance() {
         return ourInstance;
     }
 
     private MySingletone() {
+    }
+
+    public void ShowProgressBar (Context _context) {
+        dialog = new ProgressDialog(_context);
+        // make the progress bar cancelable
+        dialog.setCancelable(true);
+        // set a message text
+        dialog.setMessage("Please wait..");
+        // show it
+        dialog.show();
+    }
+
+    public void HideProgressBar(){
+        dialog.hide();
     }
 
     // 화면에 Toast 메세지 띄우는 함수

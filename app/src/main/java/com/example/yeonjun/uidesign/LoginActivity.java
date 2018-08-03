@@ -28,6 +28,7 @@ public class LoginActivity extends AppCompatActivity {
     Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
+            MySingletone.getInstance().HideProgressBar();
             switch (msg.what){
                 case StatusCode.SUCCESS:
                     MySingletone.getInstance().ShowToastMessage("Login Success!", getApplicationContext());
@@ -73,6 +74,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 // check id, password with the server
                 // <-----------------------------------------
+                MySingletone.getInstance().ShowProgressBar(LoginActivity.this);
                 new SignInTask(mHandler, sp).execute(idEditText.getText().toString(), pwEditText.getText().toString());
             }
         });
