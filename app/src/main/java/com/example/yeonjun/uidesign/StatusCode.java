@@ -14,4 +14,6 @@ public class StatusCode {
 
     public static final String TYPE_ID = "id";
     public static final String TYPE_EMAIL = "email";
+
+    public static final String TIMER_FORMAT = "%02d:%02d";
 }

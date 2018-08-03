@@ -2,6 +2,7 @@ package com.example.yeonjun.uidesign;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -12,9 +13,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONObject;
+
+import java.util.concurrent.TimeUnit;
 
 public class AuthenticationActivity extends AppCompatActivity {
 
@@ -23,6 +27,8 @@ public class AuthenticationActivity extends AppCompatActivity {
     Button submitButton;
     EditText codeEditText;
     String previousActivity;
+    TextView timerText;
+    CountDownTimer timer;
   
     private Handler mHandler = new Handler(){
         @Override
@@ -30,6 +36,7 @@ public class AuthenticationActivity extends AppCompatActivity {
             MySingletone.getInstance().HideProgressBar();
             switch (msg.what){
                 case StatusCode.SUCCESS:
+                    timer.cancel();
                     isVerified = true;
                     MySingletone.getInstance().ShowToastMessage("Verify Succeed!", getApplicationContext());
                     break;
@@ -50,6 +57,20 @@ public class AuthenticationActivity extends AppCompatActivity {
         verifyButton = (Button)findViewById(R.id.verifyButton);
         submitButton = (Button)findViewById(R.id.submitButton);
         codeEditText = findViewById(R.id.codeEditText);
+        timerText = findViewById(R.id.timerText);
+        timer = new CountDownTimer(180000, 1000){
+            @Override
+            public void onTick(long l) {
+                timerText.setText("[Remaining Time] " + String.format(StatusCode.TIMER_FORMAT,
+                        TimeUnit.MILLISECONDS.toMinutes(l), TimeUnit.MILLISECONDS.toSeconds(l)
+                                - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(l))));
+            }
+
+            @Override
+            public void onFinish() {
+                MySingletone.getInstance().ShowToastMessage("Verification Time is over !", getApplicationContext());
+            }
+        }.start();
 
         codeEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -101,6 +122,7 @@ public class AuthenticationActivity extends AppCompatActivity {
                     return;
                 }
 
+                timer.cancel();
                 Intent intent;
                 if(previousActivity.contentEquals("register")){
                     MySingletone.getInstance().ShowToastMessage("registration success!", getApplicationContext());
