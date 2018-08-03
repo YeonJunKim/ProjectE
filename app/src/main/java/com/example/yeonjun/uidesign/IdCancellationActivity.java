@@ -20,8 +20,16 @@ public class IdCancellationActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case StatusCode.SUCCESS:
+                    MySingletone.getInstance().ShowToastMessage("Check your email", getApplicationContext());
+                    Intent intent = new Intent(
+                            getApplicationContext(),
+                            AuthenticationActivity.class);
+                    intent.putExtra("name", "idCancellation");
+                    intent.putExtra("email", emailEditText.getText().toString());
+                    startActivity(intent);
                     break;
                 case StatusCode.FAILED:
+                    MySingletone.getInstance().ShowToastMessage("email or password not match", getApplicationContext());
                     break;
             }
         }
@@ -60,13 +68,8 @@ public class IdCancellationActivity extends AppCompatActivity {
 
                 // IDC - REG : ID Cancellation Request
                 // <--------------------------------------
-
-
-                Intent intent = new Intent(
-                        getApplicationContext(),
-                        AuthenticationActivity.class);
-                intent.putExtra("name", "idCancellation");
-                startActivity(intent);
+                new CancellationTask(mHandler, getSharedPreferences(getString(R.string.sh_pref), MODE_PRIVATE))
+                        .execute(emailEditText.getText().toString(), pwEditText.getText().toString());
             }
         });
     }

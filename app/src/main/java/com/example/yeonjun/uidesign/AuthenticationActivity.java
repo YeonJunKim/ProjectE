@@ -84,6 +84,9 @@ public class AuthenticationActivity extends AppCompatActivity {
                     else if(previousActivity.contentEquals("register"))
                         new VerficationTask(mHandler, getSharedPreferences(getString(R.string.sh_pref), MODE_PRIVATE), StatusCode.REGISTER_VERIFY)
                                 .execute(getIntent().getStringExtra("email"), codeEditText.getText().toString());
+                    else if(previousActivity.contentEquals("idCancellation"))
+                        new VerficationTask(mHandler, getSharedPreferences(getString(R.string.sh_pref), MODE_PRIVATE), StatusCode.CANCEL_ID_VERIFY)
+                                .execute(getIntent().getStringExtra("email"), codeEditText.getText().toString());
                 }
             }
         });
