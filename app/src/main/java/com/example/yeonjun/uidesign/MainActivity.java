@@ -1,5 +1,7 @@
 package com.example.yeonjun.uidesign;
 
+import android.hardware.Sensor;
+import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.Fragment;
@@ -20,6 +22,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -27,6 +30,7 @@ public class MainActivity extends AppCompatActivity
     Toolbar toolbar;
     SectionPageAdapter mSectionPageAdapter;
     ViewPager mViewPager;
+    TextView accountIdText;
 
     private void SetupViewPager(ViewPager viewPager){
         SectionPageAdapter adapter = new SectionPageAdapter(getSupportFragmentManager());
@@ -34,6 +38,8 @@ public class MainActivity extends AppCompatActivity
         adapter.AddFragment(new RealTimeFragment(), "RealTimeFragment");
         adapter.AddFragment(new MapFragment(), "MapFragment");
         adapter.AddFragment(new HistoryFragment(), "HistoryFragment");
+        adapter.AddFragment(new SensorFragment(), "SensorFragment");
+
         viewPager.setAdapter(adapter);
     }
 
@@ -53,10 +59,14 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setCheckedItem(R.id.drowsyDriving);
+        accountIdText = navigationView.getHeaderView(0).findViewById(R.id.accountID);
+        accountIdText.setText(getIntent().getStringExtra("id"));
 
         mSectionPageAdapter = new SectionPageAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager)findViewById(R.id.viewPager);
         SetupViewPager(mViewPager);
+        mViewPager.setOffscreenPageLimit(5);
     }
 
     @Override
@@ -92,6 +102,9 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.history) {
             toolbar.setTitle("History Data View");
             mViewPager.setCurrentItem(3);
+        } else if (id == R.id.sensor) {
+            toolbar.setTitle("Sensor List");
+            mViewPager.setCurrentItem(4);
         } else if (id == R.id.changePw) {
             Intent intent = new Intent(
                     getApplicationContext(),
@@ -119,4 +132,5 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 }
