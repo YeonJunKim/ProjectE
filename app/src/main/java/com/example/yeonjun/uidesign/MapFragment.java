@@ -20,8 +20,11 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -74,6 +77,26 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         map = googleMap;
         map.getUiSettings().setMyLocationButtonEnabled(true);
         map.setMyLocationEnabled(true);
+        map.setOnPolylineClickListener(new GoogleMap.OnPolylineClickListener()
+        {
+            @Override
+            public void onPolylineClick(Polyline polyline) {
+            }
+        });
+        map.setOnCircleClickListener(new GoogleMap.OnCircleClickListener() {
+            @Override
+            public void onCircleClick(Circle circle) {
+
+                Marker m =  map.addMarker(new MarkerOptions()
+                        .alpha(0.0f)
+                        .infoWindowAnchor(.6f,1.0f)
+                        .position(circle.getCenter())
+                        .title("Air Quality")
+                        .snippet(Integer.toString(circle.getFillColor())));
+
+                m.showInfoWindow();
+            }
+        });
 
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(QI_LAT_LNG, 15));
         map.addMarker(new MarkerOptions().position(QI_LAT_LNG).title("Qualcomm Institute"));
@@ -285,6 +308,32 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
+    private void drawCircle(LatLng point){
+
+        // Instantiating CircleOptions to draw a circle around the marker
+        CircleOptions circleOptions = new CircleOptions();
+
+        // Specifying the center of the circle
+        circleOptions.center(point);
+
+        // Radius of the circle
+        circleOptions.radius(20);
+
+        // Border color of the circle
+        circleOptions.strokeColor(Color.BLACK);
+
+        // Fill color of the circle
+        circleOptions.fillColor(0x30ff0000);
+
+        // Border width of the circle
+        circleOptions.strokeWidth(2);
+
+        circleOptions.clickable(true);
+        // Adding the circle to the GoogleMap
+        map.addCircle(circleOptions);
+
+    }
+
 
     void DrawLineOnMap(List<LatLng> _points) {
         boolean b = true;
@@ -301,16 +350,32 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 b = !b;
 
             if(b == false) {
-                map.addPolyline(new PolylineOptions()
-                        .add(_points.get(i), _points.get(i + 1))
-                        .width(40)
-                        .color(Color.rgb(255, randNum, 0)));
+//                map.addPolyline(new PolylineOptions()
+//                        .add(_points.get(i), _points.get(i + 1))
+//                        .width(40)
+//                        .color(Color.rgb(255, randNum, 0)))
+//                .setClickable(true);
+
+                map.addCircle(new CircleOptions()
+                        .center(_points.get(i))
+                        .radius(20)
+                        .strokeColor(Color.rgb(255, randNum, 0))
+                        .fillColor(Color.rgb(255, randNum, 0)))
+                        .setClickable(true);
             }
             else {
-                map.addPolyline(new PolylineOptions()
-                        .add(_points.get(i), _points.get(i + 1))
-                        .width(40)
-                        .color(Color.rgb(0, 255, 0)));
+//                map.addPolyline(new PolylineOptions()
+//                        .add(_points.get(i), _points.get(i + 1))
+//                        .width(40)
+//                        .color(Color.rgb(0, 255, 0)))
+//                        .setClickable(true);
+
+                map.addCircle(new CircleOptions()
+                        .center(_points.get(i))
+                        .radius(20)
+                        .strokeColor(Color.rgb(0, 255, 0))
+                        .fillColor(Color.rgb(0, 255, 0)))
+                        .setClickable(true);
             }
 
         }
