@@ -82,6 +82,7 @@ public class RegisterActivity extends AppCompatActivity {
         submitButton = findViewById(R.id.submitButton);
 
 
+
         verifyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {    // on Verify button click

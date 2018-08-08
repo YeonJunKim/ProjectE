@@ -37,6 +37,7 @@ public class LoginActivity extends AppCompatActivity {
                     Intent intent = new Intent(
                             getApplicationContext(),
                             MainActivity.class);
+                    intent.putExtra("id", idEditText.getText().toString());
                     startActivity(intent);
                     break;
                 case StatusCode.FAILED:
@@ -56,6 +57,8 @@ public class LoginActivity extends AppCompatActivity {
         findPwButton = (Button)findViewById(R.id.findPwButton);
         idEditText = findViewById(R.id.idEditText);
         pwEditText = findViewById(R.id.pwEditText);
+        idEditText.setText("remn0315");
+        pwEditText.setText("111111");
 
         sp = getSharedPreferences(getString(R.string.sh_pref), MODE_PRIVATE);
 

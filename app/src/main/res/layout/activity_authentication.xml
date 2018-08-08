@@ -10,12 +10,14 @@
     <ImageView
         android:id="@+id/titleBarImage"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="71dp"
         android:layout_marginBottom="500dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@color/colorPrimary" />
 
     <TextView
@@ -26,7 +28,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="14dp"
+        android:layout_marginTop="16dp"
         android:text="Authentication"
         android:textColor="#FFFFFF"
         android:textSize="12pt"
@@ -49,24 +51,24 @@
         android:backgroundTint="#000000"
         android:drawableLeft="@drawable/ic_vpn_key_black_24dp"
         android:ems="10"
+        android:hint=" Insert Code"
         android:inputType="text"
         android:padding="10dp"
-        android:hint=" Insert Code"
         android:textColor="#000000"
         android:textSize="10pt"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.341"
+        app:layout_constraintHorizontal_bias="0.32"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.622" />
 
     <Button
         android:id="@+id/verifyButton"
-        android:layout_width="73dp"
+        android:layout_width="86dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="304dp"
+        android:layout_marginBottom="452dp"
         android:layout_marginEnd="16dp"
         android:layout_marginLeft="6dp"
         android:layout_marginRight="16dp"
@@ -74,14 +76,14 @@
         android:text="verify"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.2"
         app:layout_constraintStart_toEndOf="@+id/codeEditText" />
 
     <Button
         android:id="@+id/submitButton"
         android:layout_width="165dp"
         android:layout_height="60dp"
-        android:layout_marginBottom="160dp"
+        android:layout_marginBottom="288dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
@@ -90,12 +92,11 @@
         android:textSize="8pt"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="256dp"
+        android:layout_width="272dp"
         android:layout_height="95dp"
         android:layout_marginBottom="43dp"
         android:layout_marginEnd="85dp"
@@ -104,13 +105,13 @@
         android:layout_marginStart="100dp"
         android:layout_marginTop="27dp"
         android:text="We have sent you the code to your email, insert the code to verify"
-        android:textSize="8pt"
+        android:textSize="9pt"
         app:layout_constraintBottom_toTopOf="@+id/codeEditText"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.631"
+        app:layout_constraintHorizontal_bias="0.673"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titleBarImage"
-        app:layout_constraintVertical_bias="0.2" />
+        app:layout_constraintVertical_bias="0.513" />
 
     <TextView
         android:id="@+id/timerText"
@@ -127,6 +128,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/codeEditText"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.046" />
 
 </android.support.constraint.ConstraintLayout>

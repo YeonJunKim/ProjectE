@@ -49,7 +49,6 @@ public class FindPasswordActivity extends AppCompatActivity {
         emailEditText = findViewById(R.id.emailEditText);
         submitButton = (Button)findViewById(R.id.submitButton);
 
-
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {    // on Submit button click

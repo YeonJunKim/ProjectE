@@ -1,14 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".HistoryFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="History fragment" />
+        android:layout_height="match_parent">
+
+        <Spinner
+            android:id="@+id/objectSpinner"
+            android:layout_width="181dp"
+            android:layout_height="56dp"
+            android:layout_marginBottom="50dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:background="@android:drawable/btn_dropdown"
+            android:overlapAnchor="false"
+            android:spinnerMode="dropdown"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/lineChart"
+            app:layout_constraintVertical_bias="0.263" />
+
+        <Spinner
+            android:id="@+id/dateSpinner"
+            android:layout_width="186dp"
+            android:layout_height="56dp"
+            android:layout_marginBottom="50dp"
+            android:layout_marginEnd="68dp"
+            android:layout_marginLeft="53dp"
+            android:layout_marginRight="68dp"
+            android:layout_marginStart="53dp"
+            android:layout_marginTop="8dp"
+            android:background="@android:drawable/btn_dropdown"
+            android:overlapAnchor="false"
+            android:spinnerMode="dropdown"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.44"
+            app:layout_constraintStart_toEndOf="@+id/objectSpinner"
+            app:layout_constraintTop_toBottomOf="@+id/lineChart"
+            app:layout_constraintVertical_bias="0.263" />
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/lineChart"
+            android:layout_width="match_parent"
+            android:layout_height="427dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"></com.github.mikephil.charting.charts.LineChart>
+    </android.support.constraint.ConstraintLayout>
 
 </FrameLayout>

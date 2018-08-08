@@ -18,6 +18,7 @@ public class IdCancellationActivity extends AppCompatActivity {
     Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
+            MySingletone.getInstance().HideProgressBar();
             switch (msg.what){
                 case StatusCode.SUCCESS:
                     MySingletone.getInstance().ShowToastMessage("Check your email", getApplicationContext());
@@ -68,6 +69,7 @@ public class IdCancellationActivity extends AppCompatActivity {
 
                 // IDC - REG : ID Cancellation Request
                 // <--------------------------------------
+                MySingletone.getInstance().ShowProgressBar(IdCancellationActivity.this);
                 new CancellationTask(mHandler, getSharedPreferences(getString(R.string.sh_pref), MODE_PRIVATE))
                         .execute(emailEditText.getText().toString(), pwEditText.getText().toString());
             }

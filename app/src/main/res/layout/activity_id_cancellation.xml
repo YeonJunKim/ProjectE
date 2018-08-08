@@ -10,12 +10,14 @@
     <ImageView
         android:id="@+id/titleBarImage"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="71dp"
         android:layout_marginBottom="500dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@color/colorPrimary" />
 
     <TextView
@@ -38,7 +40,7 @@
 
     <EditText
         android:id="@+id/emailEditText"
-        android:layout_width="245dp"
+        android:layout_width="302dp"
         android:layout_height="55dp"
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="8dp"
@@ -57,16 +59,16 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/pwEditText"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.243"
+        app:layout_constraintHorizontal_bias="0.24"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titleText"
-        app:layout_constraintVertical_bias="0.859" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <EditText
         android:id="@+id/pwEditText"
-        android:layout_width="245dp"
+        android:layout_width="300dp"
         android:layout_height="55dp"
-        android:layout_marginBottom="36dp"
+        android:layout_marginBottom="52dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
@@ -82,14 +84,14 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/submitButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.243"
+        app:layout_constraintHorizontal_bias="0.24"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/submitButton"
         android:layout_width="165dp"
         android:layout_height="60dp"
-        android:layout_marginBottom="212dp"
+        android:layout_marginBottom="352dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
@@ -98,7 +100,6 @@
         android:textSize="8pt"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
