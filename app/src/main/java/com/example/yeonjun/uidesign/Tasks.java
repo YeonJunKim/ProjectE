@@ -571,7 +571,31 @@ class HistoricalAQITask extends Tasks{
     @Override
     protected Integer doInBackground(String... strings) {
         try{
-            URL url = new URL("http://192.241.221.155:8081/api/data/aqi/history/");
+            URL url = new URL("http://192.241.221.155:8081/api/data/aqi/history/"
+            +strings[0]+"/"+strings[1]+"/"+strings[2]+"/"+strings[3]+"/2/" + sp.getString("token", null));
+            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+            conn.setRequestMethod("GET");
+
+            if(conn.getResponseCode() == HttpURLConnection.HTTP_OK){
+                InputStream is = conn.getInputStream();
+                BufferedReader buffer = new BufferedReader(new InputStreamReader(is));
+                String input = null;
+                StringBuilder sb = new StringBuilder();
+                while((input = buffer.readLine()) != null){
+                    Log.i("JADE-DUMMY", input);
+                    sb.append(input);
+                }
+
+                JSONObject response = new JSONObject(sb.toString());
+                if(response.getBoolean("success")) {
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putString(StatusCode.HISTROICAL_AQI, sb.toString());
+                    editor.commit();
+                    return StatusCode.SUCCESS;
+                }
+                else
+                    return StatusCode.FAILED;
+            }
         } catch (Exception e){
             Log.i("JADE-ERROR", e.toString());
         }
