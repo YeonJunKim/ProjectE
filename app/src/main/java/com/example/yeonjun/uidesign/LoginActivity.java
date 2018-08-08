@@ -57,8 +57,8 @@ public class LoginActivity extends AppCompatActivity {
         findPwButton = (Button)findViewById(R.id.findPwButton);
         idEditText = findViewById(R.id.idEditText);
         pwEditText = findViewById(R.id.pwEditText);
-        idEditText.setText("remn0315");
-        pwEditText.setText("111111");
+        idEditText.setText("ella123");
+        pwEditText.setText("ella11");
 
         sp = getSharedPreferences(getString(R.string.sh_pref), MODE_PRIVATE);
 

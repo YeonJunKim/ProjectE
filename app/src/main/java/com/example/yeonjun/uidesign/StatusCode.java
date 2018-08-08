@@ -21,6 +21,8 @@ public interface StatusCode {
     public static final String TIMER_FORMAT = "%02d:%02d";
 
     public static final String LIST_SENSOR = "listSensor";
+    public static final String HISTROICAL_AQI = "historicalAQI";
+
     public static final String LONGITUDE = "lng";
     public static final String LATITUDE = "lat";
 }

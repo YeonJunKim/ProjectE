@@ -1,9 +1,12 @@
 package com.example.yeonjun.uidesign;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,6 +33,9 @@ import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
@@ -41,6 +47,29 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
     Spinner objectSpinner;
     Spinner dateSpinner;
 
+    Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case StatusCode.SUCCESS:
+                    try {
+                        JSONObject response = new JSONObject(sp.getString(StatusCode.HISTROICAL_AQI, null));
+                        JSONArray array = response.getJSONArray("data");
+                        for(int i = 0; i < array.length(); i++)
+                            aqiArrayList.add(new AQI(array.getJSONObject(i)));
+                    } catch (Exception e){
+
+                    }
+                    break;
+                case StatusCode.FAILED:
+                    break;
+            }
+        }
+    };
+    ArrayList<AQI> aqiArrayList = new ArrayList<AQI>();
+
+    SharedPreferences sp;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -51,6 +80,8 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        sp = getActivity().getSharedPreferences(getString(R.string.sh_pref), Context.MODE_PRIVATE);
 
         objectSpinner = view.findViewById(R.id.objectSpinner);
         dateSpinner = view.findViewById(R.id.dateSpinner);
@@ -130,12 +161,13 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
                 MySingletone.getInstance().ShowToastMessage(Integer.toString(position), getContext());
                 switch (position) {
                     case 0: // 1 DAY
+                        new HistoricalAQITask(mHandler, sp).execute();
                         break;
                     case 1: // 1 WEEK
-
+                        new HistoricalAQITask(mHandler, sp).execute();
                         break;
                     case 2: // 1 MONTH
-
+                        new HistoricalAQITask(mHandler, sp).execute();
                         break;
                 }
             }
