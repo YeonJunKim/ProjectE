@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -455,6 +456,123 @@ class CancellationTask extends Tasks{
             }
 
         }catch (Exception e){
+            Log.i("JADE-ERROR", e.toString());
+        }
+        return null;
+    }
+
+    @Override
+    protected void onPostExecute(Integer result) {
+        super.onPostExecute(result);
+    }
+}
+
+class SensorRegistTask extends Tasks{
+    public SensorRegistTask(Handler handler, SharedPreferences sp) {
+        super(handler, sp);
+    }
+
+    @Override
+    protected Integer doInBackground(String... strings) {
+        try{
+            URL url = new URL("http://192.241.221.155:8081/api/sensor/insert/"
+                    + sp.getString("token", null));
+            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-type", "application/json");
+
+            JSONObject data = new JSONObject();
+            data.put("mac", strings[0]);
+            data.put("name", strings[1]);
+
+            OutputStream os = conn.getOutputStream();
+            os.write(data.toString().getBytes("UTF-8"));
+            os.flush();
+            os.close();
+
+            if(conn.getResponseCode() == HttpURLConnection.HTTP_OK){
+                InputStream is = conn.getInputStream();
+                BufferedReader buffer = new BufferedReader(new InputStreamReader(is));
+                String input = null;
+                StringBuilder sb = new StringBuilder();
+                while((input = buffer.readLine()) != null){
+                    Log.i("JADE-INPUT", input);
+                    sb.append(input);
+                }
+
+                JSONObject response = new JSONObject(sb.toString());
+                if(response.getBoolean("success"))
+                    return StatusCode.REGIST_SENSOR;
+                else
+                    return StatusCode.FAILED;
+            }
+        }catch (Exception e){
+            Log.i("JADE-ERROR", e.toString());
+        }
+        return null;
+    }
+
+    @Override
+    protected void onPostExecute(Integer result) {
+        super.onPostExecute(result);
+    }
+}
+
+class SensorListTask extends Tasks{
+    public SensorListTask(Handler handler, SharedPreferences sp) {
+        super(handler, sp);
+    }
+
+    @Override
+    protected Integer doInBackground(String... strings) {
+        try{
+            URL url = new URL("http://192.241.221.155:8081/api/sensor/list/"
+                    + sp.getString("token", null));
+            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+            conn.setRequestMethod("GET");
+
+            if(conn.getResponseCode() == HttpURLConnection.HTTP_OK){
+                InputStream is = conn.getInputStream();
+                BufferedReader buffer = new BufferedReader(new InputStreamReader(is));
+                String input = null;
+                StringBuilder sb = new StringBuilder();
+                while((input = buffer.readLine()) != null){
+                    Log.i("JADE-INPUT", input);
+                    sb.append(input);
+                }
+
+                JSONObject response = new JSONObject(sb.toString());
+                if(response.getBoolean("success")) {
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putString(StatusCode.LIST_SENSOR, sb.toString());
+                    editor.commit();
+                    return StatusCode.RECEIVE_SENSOR_LIST;
+                }
+                else
+                    return StatusCode.FAILED;
+            }
+        }catch (Exception e){
+            Log.i("JADE-ERROR", e.toString());
+        }
+        return null;
+    }
+
+    @Override
+    protected void onPostExecute(Integer result) {
+        super.onPostExecute(result);
+    }
+}
+
+class HistoricalAQITask extends Tasks{
+    public HistoricalAQITask(Handler handler, SharedPreferences sp) {
+        super(handler, sp);
+    }
+
+    @Override
+    protected Integer doInBackground(String... strings) {
+        try{
+            URL url = new URL("http://192.241.221.155:8081/api/data/aqi/history/");
+        } catch (Exception e){
             Log.i("JADE-ERROR", e.toString());
         }
         return null;
