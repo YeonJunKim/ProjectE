@@ -12,6 +12,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
 
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -53,7 +55,9 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".ChangePasswordActivity" />
         <activity android:name=".IdCancellationActivity"></activity>
+        <activity android:name=".DeviceListActivity"/>
 
+        <service android:name=".GPSCollecter"/>
         <!--<uses-library android:name="org.apache.http.legacy" android:required="false" />-->
     </application>
 

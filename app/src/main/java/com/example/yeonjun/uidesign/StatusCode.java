@@ -1,19 +1,26 @@
 package com.example.yeonjun.uidesign;
 
-public class StatusCode {
-    public static final int FAILED = 0;
-    public static final int SUCCESS = 1;
-    public static final int DUPLICATE_ID = 2;
-    public static final int NOT_DUPLICATE_ID = 3;
-    public static final int DUPLICATE_EMAIL = 4;
-    public static final int NOT_DUPLICATE_MAIL = 5;
+public interface StatusCode {
+    public static final int FAILED = 11;
+    public static final int SUCCESS = 12;
+    public static final int DUPLICATE_ID = 13;
+    public static final int NOT_DUPLICATE_ID = 14;
+    public static final int DUPLICATE_EMAIL = 15;
+    public static final int NOT_DUPLICATE_MAIL = 16;
 
-    public static final int REGISTER_VERIFY = 11;
-    public static final int FORGOT_PW_VERIFY = 12;
-    public static final int CANCEL_ID_VERIFY = 13;
+    public static final int REGISTER_VERIFY = 21;
+    public static final int FORGOT_PW_VERIFY = 22;
+    public static final int CANCEL_ID_VERIFY = 23;
+
+    public static final int RECEIVE_SENSOR_LIST = 31;
+    public static final int REGIST_SENSOR = 32;
 
     public static final String TYPE_ID = "id";
     public static final String TYPE_EMAIL = "email";
 
     public static final String TIMER_FORMAT = "%02d:%02d";
+
+    public static final String LIST_SENSOR = "listSensor";
+    public static final String LONGITUDE = "lng";
+    public static final String LATITUDE = "lat";
 }

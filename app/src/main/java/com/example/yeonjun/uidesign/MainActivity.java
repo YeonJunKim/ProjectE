@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity
         adapter.AddFragment(new RealTimeFragment(), "RealTimeFragment");
         adapter.AddFragment(new MapFragment(), "MapFragment");
         adapter.AddFragment(new HistoryFragment(), "HistoryFragment");
+        adapter.AddFragment(new BluetoothChatFragment(), "SensorFragment");
         viewPager.setAdapter(adapter);
     }
 
@@ -65,6 +66,18 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onResume() {
+        startService(new Intent(MainActivity.this, GPSCollecter.class));
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        stopService(new Intent(MainActivity.this, GPSCollecter.class));
+        super.onPause();
+    }
+
+    @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -92,6 +105,9 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.history) {
             toolbar.setTitle("History Data View");
             mViewPager.setCurrentItem(3);
+        } else if(id == R.id.sensor) {
+            toolbar.setTitle("Sensor View");
+            mViewPager.setCurrentItem(4);
         } else if (id == R.id.changePw) {
             Intent intent = new Intent(
                     getApplicationContext(),
