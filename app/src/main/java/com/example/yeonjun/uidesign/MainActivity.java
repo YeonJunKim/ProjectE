@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity
 
     Toolbar toolbar;
     SectionPageAdapter mSectionPageAdapter;
-    ViewPager mViewPager;
+    NonSwipeableViewPager mViewPager;
     TextView accountIdText;
 
     private void SetupViewPager(ViewPager viewPager){
@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity
         adapter.AddFragment(new RealTimeFragment(), "RealTimeFragment");
         adapter.AddFragment(new MapFragment(), "MapFragment");
         adapter.AddFragment(new HistoryFragment(), "HistoryFragment");
-        adapter.AddFragment(new SensorFragment(), "SensorFragment");
 
         viewPager.setAdapter(adapter);
     }
@@ -64,7 +63,7 @@ public class MainActivity extends AppCompatActivity
         accountIdText.setText(getIntent().getStringExtra("id"));
 
         mSectionPageAdapter = new SectionPageAdapter(getSupportFragmentManager());
-        mViewPager = (ViewPager)findViewById(R.id.viewPager);
+        mViewPager = (NonSwipeableViewPager) findViewById(R.id.viewPager);
         SetupViewPager(mViewPager);
         mViewPager.setOffscreenPageLimit(5);
     }
@@ -102,9 +101,6 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.history) {
             toolbar.setTitle("History Data View");
             mViewPager.setCurrentItem(3);
-        } else if (id == R.id.sensor) {
-            toolbar.setTitle("Sensor List");
-            mViewPager.setCurrentItem(4);
         } else if (id == R.id.changePw) {
             Intent intent = new Intent(
                     getApplicationContext(),

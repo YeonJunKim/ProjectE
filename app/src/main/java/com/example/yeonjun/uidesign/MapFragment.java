@@ -187,32 +187,32 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         sourcePoints9.add(new LatLng(32.865838,-117.236860));
         sourcePoints9.add(new LatLng(32.863690,-117.236187));
 
-        List<LatLng> snappedPoints = new ArrayList<>();
-        new GetSnappedPointsAsyncTask().execute(sourcePoints, null, snappedPoints);
-
-        List<LatLng> snappedPoints2 = new ArrayList<>();
-        new GetSnappedPointsAsyncTask().execute(sourcePoints2, null, snappedPoints2);
-
-        List<LatLng> snappedPoints3 = new ArrayList<>();
-        new GetSnappedPointsAsyncTask().execute(sourcePoints3, null, snappedPoints3);
-
-        List<LatLng> snappedPoints4 = new ArrayList<>();
-        new GetSnappedPointsAsyncTask().execute(sourcePoints4, null, snappedPoints4);
-
-        List<LatLng> snappedPoints5 = new ArrayList<>();
-        new GetSnappedPointsAsyncTask().execute(sourcePoints5, null, snappedPoints5);
-
-        List<LatLng> snappedPoints6 = new ArrayList<>();
-        new GetSnappedPointsAsyncTask().execute(sourcePoints6, null, snappedPoints6);
-
-        List<LatLng> snappedPoints7 = new ArrayList<>();
-        new GetSnappedPointsAsyncTask().execute(sourcePoints7, null, snappedPoints7);
-
-        List<LatLng> snappedPoints8 = new ArrayList<>();
-        new GetSnappedPointsAsyncTask().execute(sourcePoints8, null, snappedPoints8);
-
-        List<LatLng> snappedPoints9 = new ArrayList<>();
-        new GetSnappedPointsAsyncTask().execute(sourcePoints9, null, snappedPoints9);
+//        List<LatLng> snappedPoints = new ArrayList<>();
+//        new GetSnappedPointsAsyncTask().execute(sourcePoints, null, snappedPoints);
+//
+//        List<LatLng> snappedPoints2 = new ArrayList<>();
+//        new GetSnappedPointsAsyncTask().execute(sourcePoints2, null, snappedPoints2);
+//
+//        List<LatLng> snappedPoints3 = new ArrayList<>();
+//        new GetSnappedPointsAsyncTask().execute(sourcePoints3, null, snappedPoints3);
+//
+//        List<LatLng> snappedPoints4 = new ArrayList<>();
+//        new GetSnappedPointsAsyncTask().execute(sourcePoints4, null, snappedPoints4);
+//
+//        List<LatLng> snappedPoints5 = new ArrayList<>();
+//        new GetSnappedPointsAsyncTask().execute(sourcePoints5, null, snappedPoints5);
+//
+//        List<LatLng> snappedPoints6 = new ArrayList<>();
+//        new GetSnappedPointsAsyncTask().execute(sourcePoints6, null, snappedPoints6);
+//
+//        List<LatLng> snappedPoints7 = new ArrayList<>();
+//        new GetSnappedPointsAsyncTask().execute(sourcePoints7, null, snappedPoints7);
+//
+//        List<LatLng> snappedPoints8 = new ArrayList<>();
+//        new GetSnappedPointsAsyncTask().execute(sourcePoints8, null, snappedPoints8);
+//
+//        List<LatLng> snappedPoints9 = new ArrayList<>();
+//        new GetSnappedPointsAsyncTask().execute(sourcePoints9, null, snappedPoints9);
     }
 
 

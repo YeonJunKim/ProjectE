@@ -20,10 +20,6 @@
             android:id="@+id/history"
             android:icon="@drawable/ic_history_gray_24dp"
             android:title="History" />
-        <item
-            android:id="@+id/sensor"
-            android:icon="@drawable/ic_device_hub_gray_24dp"
-            android:title="Sensors" />
     </group>
 
     <item android:title="Account">
