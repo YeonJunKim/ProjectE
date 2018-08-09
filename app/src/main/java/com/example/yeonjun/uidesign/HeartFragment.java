@@ -2,7 +2,6 @@ package com.example.yeonjun.uidesign;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -12,15 +11,20 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class HeartFragment extends Fragment {
     TextView monitorHeart, monitorRR;
+    ImageView ivHeartbeat, ivHeartbeat2;
     SharedPreferences sp;
     private static HeartUpdater heartUpdater;
+
     private Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -42,6 +46,12 @@ public class HeartFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         sp = getActivity().getSharedPreferences(getString(R.string.sh_pref), Context.MODE_PRIVATE);
+
+        ivHeartbeat = view.findViewById(R.id.ivHeartbeat);
+        Glide.with(this).asGif().load(R.raw.heartbeat).into(ivHeartbeat);
+
+        ivHeartbeat2 = view.findViewById(R.id.ivHeartbeat2);
+        Glide.with(this).asGif().load(R.raw.heartbeat2).into(ivHeartbeat2);
 
         monitorHeart = view.findViewById(R.id.monitorHeart);
         monitorRR = view.findViewById(R.id.monitorRR);
