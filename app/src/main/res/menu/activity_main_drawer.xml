@@ -22,6 +22,7 @@
             android:title="History" />
         <item
             android:id="@+id/sensor"
+            android:icon="@drawable/ic_memory_black_24dp"
             android:title="Sensor" />
     </group>
 

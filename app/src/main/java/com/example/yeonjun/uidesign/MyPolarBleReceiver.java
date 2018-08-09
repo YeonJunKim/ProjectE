@@ -55,6 +55,10 @@ public class MyPolarBleReceiver extends BroadcastReceiver {
             String sessionId = tokens.nextToken();
             Log.w(this.getClass().getName(), "####Received heartRate: " +heartRate+" pnnPercentage: "+pnnPercentage+" pnnCount: "+pnnCount+" rrThreshold: "+rrThreshold+" totalNN: "+totalNN+" lastRRvalue: "+lastRRvalue+" sessionId: "+sessionId);
 
+            SharedPreferences.Editor editor = MainActivity.sp.edit();
+            editor.putInt(StatusCode.HEART_RATE, heartRate);
+            editor.putInt(StatusCode.RR_INTERVAL, lastRRvalue);
+            editor.apply();
             new HeartDataTransferTask(mHandler, MainActivity.sp).execute(String.valueOf(heartRate), String.valueOf(lastRRvalue));
         }
     }

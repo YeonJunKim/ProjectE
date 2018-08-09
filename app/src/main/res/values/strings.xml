@@ -1,5 +1,5 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="app_name">UIDesign</string>
+    <string name="app_name">D.D.D.</string>
     <string name="sh_pref">UserInfo</string>
 
     <string name="testURL">"http://192.241.221.155:8081/api/test"</string>
