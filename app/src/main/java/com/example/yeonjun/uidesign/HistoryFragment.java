@@ -39,7 +39,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.lang.reflect.Field;
-import java.net.Inet4Address;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -66,18 +65,25 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
             mChart.clear();
             aqiArrayList.clear();
             switch (msg.what){
-                case StatusCode.SUCCESS:
+                case StatusCode.GET_HISTORICAL_AQI:
                     try {
                         JSONObject response = new JSONObject(sp.getString(StatusCode.HISTROICAL_AQI, null));
                         JSONArray array = response.getJSONArray("data");
                         for(int i = 0; i < array.length(); i++)
                             aqiArrayList.add(new AQI(array.getJSONObject(i)));
-
-                        //UpdateChart();
                     } catch (Exception e){
-
+                        Log.i("JADE-ERROR", e.toString());
                     }
                     break;
+                case StatusCode.GET_HISTORICAL_HEART:
+                    try {
+                        JSONObject response = new JSONObject(sp.getString(StatusCode.HISTROICAL_AQI, null));
+                        JSONArray array = response.getJSONArray("data");
+                        for(int i = 0; i < array.length(); i++)
+                            aqiArrayList.add(new AQI(array.getJSONObject(i)));
+                    } catch (Exception e){
+                        Log.i("JADE-ERROR", e.toString());
+                    }
                 case StatusCode.FAILED:
                     MySingletone.getInstance().ShowToastMessage("failed data load", getContext());
                     break;

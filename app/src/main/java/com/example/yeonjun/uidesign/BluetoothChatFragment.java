@@ -18,10 +18,14 @@ package com.example.yeonjun.uidesign;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -88,7 +92,11 @@ public class BluetoothChatFragment extends Fragment {
     /**
      * Member object for the chat services
      */
-    private BluetoothChatService mChatService = null;
+    public static BluetoothChatService mChatService = null;
+
+    Button btnUnpairing;
+    TextView tvPairing, tvMAC, tvDeviceName;
+    private static String deviceName, deviceMAC;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -126,9 +134,9 @@ public class BluetoothChatFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mChatService != null) {
-            mChatService.stop();
-        }
+//        if (mChatService != null) {
+//            mChatService.stop();
+//        }
     }
 
     @Override
@@ -155,28 +163,97 @@ public class BluetoothChatFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        tvPairing = view.findViewById(R.id.tvPairing);
+        tvMAC = view.findViewById(R.id.tvMAC);
+        tvDeviceName = view.findViewById(R.id.tvDeviceName);
+
+        btnUnpairing = view.findViewById(R.id.btnUnpairing);
+        btnUnpairing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mChatService != null) {
+                    mChatService.stop();
+                    deviceMAC = "";
+                    deviceName = "";
+                }
+            }
+        });
+
         mConversationView = (ListView) view.findViewById(R.id.in);
 
-//        sensorListAdapter = new SensorListAdapter(getActivity(), getActivity()
-//                .getSharedPreferences(getString(R.string.sh_pref), Context.MODE_PRIVATE)
-//                .getString(StatusCode.LIST_SENSOR, null));
-//
-//        mConversationView.setAdapter(sensorListAdapter);
+        sensorListAdapter = new SensorListAdapter(getActivity(), getActivity()
+                .getSharedPreferences(getString(R.string.sh_pref), Context.MODE_PRIVATE)
+                .getString(StatusCode.LIST_SENSOR, null));
+
+        mConversationView.setAdapter(sensorListAdapter);
+
+        mConversationView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                final String SSN = ((TextView)view.findViewById(R.id.itemSSN)).getText().toString();
+                final String MAC = ((TextView)view.findViewById(R.id.itemMAC)).getText().toString();
+                String Device = ((TextView)view.findViewById(R.id.itemDeviceName)).getText().toString();
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Sensor Info");
+                builder.setIcon(getResources().getDrawable(R.drawable.ic_info_black_24dp));
+                builder.setMessage("SSN : " + SSN + "\nMAC : " + MAC + "\nDevice : " + Device);
+                builder.setPositiveButton("Connect",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                if(MySingletone.getInstance().isMACValid(MAC)) {
+                                    new SensorDeregisterTask(mHandler, getActivity()
+                                            .getSharedPreferences(getString(R.string.sh_pref), Context.MODE_PRIVATE))
+                                            .execute(SSN);
+                                }
+                                else
+                                    MySingletone.getInstance().ShowToastMessage("Invalid MAC address", getContext());
+                            }
+                        });
+                builder.setNegativeButton("Deregister", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if(!MAC.equals(deviceMAC)) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                            builder.setTitle("Caution");
+                            builder.setIcon(getResources().getDrawable(R.drawable.ic_warning_black_24dp));
+                            builder.setMessage("Are you sure you want to deregister the selected sensor?");
+                            builder.setPositiveButton("Yes",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            new SensorDeregisterTask(mHandler, getActivity()
+                                                    .getSharedPreferences(getString(R.string.sh_pref), Context.MODE_PRIVATE))
+                                                    .execute(SSN);
+                                        }
+                                    });
+                            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {   }
+                            });
+                            builder.show();
+                        }
+                        else
+                            MySingletone.getInstance().ShowToastMessage("Currently connected devices cannot be unregistered", getContext());
+                    }
+                });
+                builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {   }
+                });
+                builder.show();
+            }
+        });
     }
 
+    public static void resetDeviceInfo(){
+        deviceMAC = null;
+        deviceName = null;
+    }
     /**
      * Set up the UI and background operations for chat.
      */
     private void setupChat() {
         // Initialize the array adapter for the conversation thread
-
-
-        mConversationView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-            }
-        });
 
         // Initialize the BluetoothChatService to perform bluetooth connections
         mChatService = new BluetoothChatService(getActivity(), mHandler);
@@ -225,16 +302,19 @@ public class BluetoothChatFragment extends Fragment {
      *
      * @param resId a string resource ID
      */
-    private void setStatus(int resId) {
-        FragmentActivity activity = getActivity();
-        if (null == activity) {
-            return;
+    private void setStatus(int resId, int code) {
+        tvPairing.setText(resId);
+        if(code == StatusCode.SUCCESS){
+            tvMAC.setText(deviceMAC);
+            tvDeviceName.setText(deviceName);
         }
-        final ActionBar actionBar = activity.getActionBar();
-        if (null == actionBar) {
-            return;
+        else{
+            SharedPreferences.Editor editor = MainActivity.sp.edit();
+            editor.remove(StatusCode.SSN);
+            editor.apply();
+            tvMAC.setText("");
+            tvDeviceName.setText("");
         }
-        actionBar.setSubtitle(resId);
     }
 
     /**
@@ -242,16 +322,15 @@ public class BluetoothChatFragment extends Fragment {
      *
      * @param subTitle status
      */
-    private void setStatus(CharSequence subTitle) {
-        FragmentActivity activity = getActivity();
-        if (null == activity) {
-            return;
+    private void setStatus(CharSequence subTitle, int code) {
+        tvPairing.setText(subTitle);
+
+        if(code != StatusCode.SUCCESS) {
+            deviceMAC = "";
+            deviceName = "";
         }
-        final ActionBar actionBar = activity.getActionBar();
-        if (null == actionBar) {
-            return;
-        }
-        actionBar.setSubtitle(subTitle);
+        tvMAC.setText(deviceMAC);
+        tvDeviceName.setText(deviceName);
     }
 
     /**
@@ -265,17 +344,18 @@ public class BluetoothChatFragment extends Fragment {
                 case Constants.MESSAGE_STATE_CHANGE:
                     switch (msg.arg1) {
                         case BluetoothChatService.STATE_CONNECTED:
-                            setStatus(getString(R.string.title_connected_to, mConnectedDeviceName));
-                            new SensorRegistTask(mHandler,
-                                    getActivity().getSharedPreferences(getString(R.string.sh_pref), Context.MODE_PRIVATE));
-//                            sensorListAdapter.clear();
+                            setStatus(getString(R.string.title_connected_to, mConnectedDeviceName),
+                                    StatusCode.SUCCESS);
+                            new SensorRegisterTask(mHandler,
+                                    getActivity().getSharedPreferences(getString(R.string.sh_pref), Context.MODE_PRIVATE))
+                                    .execute(deviceMAC, deviceName);
                             break;
                         case BluetoothChatService.STATE_CONNECTING:
-                            setStatus(R.string.title_connecting);
+                            setStatus(R.string.title_connecting, StatusCode.FAILED);
                             break;
                         case BluetoothChatService.STATE_LISTEN:
                         case BluetoothChatService.STATE_NONE:
-                            setStatus(R.string.title_not_connected);
+                            setStatus(R.string.title_not_connected, StatusCode.FAILED);
                             break;
                     }
                     break;
@@ -312,7 +392,7 @@ public class BluetoothChatFragment extends Fragment {
                 case StatusCode.FAILED:
                     break;
                 case StatusCode.REGIST_SENSOR:
-                    MySingletone.getInstance().ShowToastMessage("regist success", getContext());
+                case StatusCode.DEREGIST_SENSOR:
                     new SensorListTask(mHandler, getActivity()
                             .getSharedPreferences(getString(R.string.sh_pref), Context.MODE_PRIVATE)).execute();
                     break;
@@ -320,7 +400,6 @@ public class BluetoothChatFragment extends Fragment {
                     sensorListAdapter = new SensorListAdapter(getActivity(), getActivity()
                             .getSharedPreferences(getString(R.string.sh_pref), Context.MODE_PRIVATE)
                             .getString(StatusCode.LIST_SENSOR, null));
-
                     mConversationView.setAdapter(sensorListAdapter);
                     break;
             }
@@ -367,6 +446,10 @@ public class BluetoothChatFragment extends Fragment {
                 .getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
         // Get the BluetoothDevice object
         BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
+
+        deviceName = device.getName();
+        deviceMAC = device.getAddress();
+
         // Attempt to connect to the device
         mChatService.connect(device, secure);
     }
@@ -409,21 +492,15 @@ public class BluetoothChatFragment extends Fragment {
             this.context = context;
             inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             try {
-                Log.i("JADE-DATA", data);
                 JSONObject jobj = new JSONObject(data);
                 list = jobj.getJSONArray("sensor");
-                Log.i("JADE-LIST", list.toString());
-                Log.i("JADE-LIST-2", list.getJSONObject(1).getString("mac"));
-                Log.i("JADE-LENGTH-2", String.valueOf(list.length()));
             }catch (Exception e){
                 Log.i("JADE-ERROR", e.toString());
             }
         }
 
-
         @Override
         public int getCount() {
-            Log.i("JADE-LENGTH-1", String.valueOf(list.length()));
             return list.length();
         }
 
@@ -431,8 +508,6 @@ public class BluetoothChatFragment extends Fragment {
         public JSONObject getItem(int position) {
             JSONObject item = new JSONObject();
             try{
-                Log.i("JADE-ITEM", String.valueOf(list.getJSONObject(position)));
-                Log.i("JADE-POS", String.valueOf(position));
                 item = list.getJSONObject(position);
             }catch (Exception e){
                 Log.i("JADE-ERROR", e.toString());
@@ -443,13 +518,11 @@ public class BluetoothChatFragment extends Fragment {
 
         @Override
         public long getItemId(int position) {
-            Log.i("JADE-POS", String.valueOf(position));
             return position;
         }
 
         @Override
         public View getView(int position, View view, ViewGroup viewGroup) {
-            Log.i("JADE-POS", String.valueOf(position));
             if (view == null) {
                 view = inflater.inflate(R.layout.list_sensor, viewGroup, false);
             }
@@ -461,19 +534,14 @@ public class BluetoothChatFragment extends Fragment {
 
             try{
                 JSONObject item = list.getJSONObject(position);
-//                JSONObject item = getItem(position);
-                Log.i("JADE-ITEM", item.toString());
                 itemSSN.setText(String.valueOf(item.getInt("SSN")));
                 itemMAC.setText(item.getString("mac"));
                 itemDeviceName.setText(item.getString("name"));
             } catch (Exception e){
                 Log.i("JADE-ERROR", e.toString());
             }
-
             return view;
         }
-
-
     }
 
 }

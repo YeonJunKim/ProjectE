@@ -6,6 +6,9 @@ import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class MySingletone {
     private static final MySingletone ourInstance = new MySingletone();
 
@@ -79,5 +82,16 @@ public class MySingletone {
             }
         }
         return true;
+    }
+
+    public String getTimestamp(){
+        long now = System.currentTimeMillis();
+        Date date = new Date(now);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh-mm-ss");
+        return dateFormat.format(date);
+    }
+
+    public boolean isMACValid(String MAC){
+        return MAC.matches("^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$");
     }
 }
