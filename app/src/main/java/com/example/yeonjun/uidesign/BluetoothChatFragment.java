@@ -196,6 +196,7 @@ public class BluetoothChatFragment extends Fragment {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle("Sensor Info");
+                builder.setIcon(getResources().getDrawable(R.drawable.ic_info_black_24dp));
                 builder.setMessage("SSN : " + SSN + "\nMAC : " + MAC + "\nDevice : " + Device);
                 builder.setPositiveButton("Connect",
                         new DialogInterface.OnClickListener() {
@@ -215,6 +216,7 @@ public class BluetoothChatFragment extends Fragment {
                         if(!MAC.equals(deviceMAC)) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                             builder.setTitle("Caution");
+                            builder.setIcon(getResources().getDrawable(R.drawable.ic_warning_black_24dp));
                             builder.setMessage("Are you sure you want to deregister the selected sensor?");
                             builder.setPositiveButton("Yes",
                                     new DialogInterface.OnClickListener() {
@@ -301,15 +303,6 @@ public class BluetoothChatFragment extends Fragment {
      * @param resId a string resource ID
      */
     private void setStatus(int resId, int code) {
-//        FragmentActivity activity = getActivity();
-//        if (null == activity) {
-//            return;
-//        }
-//        final ActionBar actionBar = activity.getActionBar();
-//        if (null == actionBar) {
-//            return;
-//        }
-//        actionBar.setSubtitle(resId);
         tvPairing.setText(resId);
         if(code == StatusCode.SUCCESS){
             tvMAC.setText(deviceMAC);
@@ -330,15 +323,6 @@ public class BluetoothChatFragment extends Fragment {
      * @param subTitle status
      */
     private void setStatus(CharSequence subTitle, int code) {
-//        FragmentActivity activity = getActivity();
-//        if (null == activity) {
-//            return;
-//        }
-//        final ActionBar actionBar = activity.getActionBar();
-//        if (null == actionBar) {
-//            return;
-//        }
-//        actionBar.setSubtitle(subTitle);
         tvPairing.setText(subTitle);
 
         if(code != StatusCode.SUCCESS) {

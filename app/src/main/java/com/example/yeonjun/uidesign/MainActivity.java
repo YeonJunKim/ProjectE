@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity
         SectionPageAdapter adapter = new SectionPageAdapter(getSupportFragmentManager());
         adapter.AddFragment(new DrowsyFragment(), "DrowsyFragment");
         adapter.AddFragment(new RealTimeFragment(), "RealTimeFragment");
+        adapter.AddFragment(new HeartFragment(), "HeartFragment");
         adapter.AddFragment(new MapFragment(), "MapFragment");
         adapter.AddFragment(new HistoryFragment(), "HistoryFragment");
         adapter.AddFragment(new BluetoothChatFragment(), "SensorFragment");
@@ -113,15 +114,18 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.realTime) {
             toolbar.setTitle("Real Time Data View");
             mViewPager.setCurrentItem(1);
+        } else if(id == R.id.heartView){
+            toolbar.setTitle("Heart View");
+            mViewPager.setCurrentItem(2);
         } else if (id == R.id.mapView) {
             toolbar.setTitle("Map View");
-            mViewPager.setCurrentItem(2);
+            mViewPager.setCurrentItem(3);
         } else if (id == R.id.history) {
             toolbar.setTitle("History Data View");
-            mViewPager.setCurrentItem(3);
+            mViewPager.setCurrentItem(4);
         } else if(id == R.id.sensor) {
             toolbar.setTitle("Sensor View");
-            mViewPager.setCurrentItem(4);
+            mViewPager.setCurrentItem(5);
         } else if (id == R.id.changePw) {
             Intent intent = new Intent(
                     getApplicationContext(),

@@ -7,6 +7,7 @@ public interface StatusCode {
     public static final int NOT_DUPLICATE_ID = 14;
     public static final int DUPLICATE_EMAIL = 15;
     public static final int NOT_DUPLICATE_MAIL = 16;
+    public static final int UPDATE = 17;
 
     public static final int REGISTER_VERIFY = 21;
     public static final int FORGOT_PW_VERIFY = 22;

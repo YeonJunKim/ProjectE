@@ -13,6 +13,10 @@
             android:icon="@drawable/ic_show_chart_gray_24dp"
             android:title="Real-time Data" />
         <item
+            android:id="@+id/heartView"
+            android:icon="@drawable/ic_favorite_border_gray_24dp"
+            android:title="Heart View"/>
+        <item
             android:id="@+id/mapView"
             android:icon="@drawable/ic_location_on_gray_24dp"
             android:title="Map View" />
