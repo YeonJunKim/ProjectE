@@ -645,7 +645,7 @@ class HistoricalAQITask extends Tasks{
                     SharedPreferences.Editor editor = sp.edit();
                     editor.putString(StatusCode.HISTROICAL_AQI, sb.toString());
                     editor.commit();
-                    return StatusCode.SUCCESS;
+                    return StatusCode.GET_HISTORICAL_AQI;
                 }
                 else
                     return StatusCode.FAILED;
