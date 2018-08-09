@@ -51,17 +51,25 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what){
-                case StatusCode.SUCCESS:
+                case StatusCode.GET_HISTORICAL_AQI:
                     try {
                         JSONObject response = new JSONObject(sp.getString(StatusCode.HISTROICAL_AQI, null));
                         JSONArray array = response.getJSONArray("data");
                         for(int i = 0; i < array.length(); i++)
                             aqiArrayList.add(new AQI(array.getJSONObject(i)));
                     } catch (Exception e){
-
+                        Log.i("JADE-ERROR", e.toString());
                     }
                     break;
-                case StatusCode.FAILED:
+                case StatusCode.GET_HISTORICAL_HEART:
+                    try {
+                        JSONObject response = new JSONObject(sp.getString(StatusCode.HISTROICAL_AQI, null));
+                        JSONArray array = response.getJSONArray("data");
+                        for(int i = 0; i < array.length(); i++)
+                            aqiArrayList.add(new AQI(array.getJSONObject(i)));
+                    } catch (Exception e){
+                        Log.i("JADE-ERROR", e.toString());
+                    }
                     break;
             }
         }

@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -36,8 +37,10 @@ public class Tasks extends AsyncTask<String, Void, Integer> {
 
     @Override
     protected void onPostExecute(Integer result) {
-        Message msg = handler.obtainMessage(result);
-        handler.sendMessage(msg);
+        if(result != null) {
+            Message msg = handler.obtainMessage(result);
+            handler.sendMessage(msg);
+        }
     }
 }
 
@@ -467,8 +470,8 @@ class CancellationTask extends Tasks{
     }
 }
 
-class SensorRegistTask extends Tasks{
-    public SensorRegistTask(Handler handler, SharedPreferences sp) {
+class SensorRegisterTask extends Tasks{
+    public SensorRegisterTask(Handler handler, SharedPreferences sp) {
         super(handler, sp);
     }
 
@@ -501,8 +504,59 @@ class SensorRegistTask extends Tasks{
                 }
 
                 JSONObject response = new JSONObject(sb.toString());
-                if(response.getBoolean("success"))
+                if(response.getBoolean("success")) {
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putInt(StatusCode.SSN, response.getInt("ssn"));
+                    editor.apply();
                     return StatusCode.REGIST_SENSOR;
+                }
+                else if(response.getString("message").equals("Duplicate MAC address")){
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putInt(StatusCode.SSN, response.getInt("ssn"));
+                    editor.apply();
+                    return StatusCode.REGIST_SENSOR;
+                }
+                else
+                    return StatusCode.FAILED;
+            }
+        }catch (Exception e){
+            Log.i("JADE-ERROR", e.toString());
+        }
+        return null;
+    }
+
+    @Override
+    protected void onPostExecute(Integer result) {
+        super.onPostExecute(result);
+    }
+}
+
+class SensorDeregisterTask extends Tasks{
+    public SensorDeregisterTask(Handler handler, SharedPreferences sp) {
+        super(handler, sp);
+    }
+
+    @Override
+    protected Integer doInBackground(String... strings) {
+        try{
+            URL url = new URL("http://192.241.221.155:8081/api/sensor/delete/"
+                    +strings[0] + "/" + sp.getString("token", null));
+            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+            conn.setRequestMethod("DELETE");
+
+            if(conn.getResponseCode() == HttpURLConnection.HTTP_OK){
+                InputStream is = conn.getInputStream();
+                BufferedReader buffer = new BufferedReader(new InputStreamReader(is));
+                String input = null;
+                StringBuilder sb = new StringBuilder();
+                while((input = buffer.readLine()) != null){
+                    Log.i("JADE-INPUT", input);
+                    sb.append(input);
+                }
+
+                JSONObject response = new JSONObject(sb.toString());
+                if(response.getBoolean("success"))
+                    return StatusCode.DEREGIST_SENSOR;
                 else
                     return StatusCode.FAILED;
             }
@@ -608,4 +662,159 @@ class HistoricalAQITask extends Tasks{
     }
 }
 
+class HeartDataTransferTask extends Tasks{
+    public HeartDataTransferTask(Handler handler, SharedPreferences sp) {
+        super(handler, sp);
+    }
 
+    @Override
+    protected Integer doInBackground(String... strings) {
+        try{
+            URL url = new URL("http://192.241.221.155:8081/api/data/heart/insert/"
+                    + sp.getString("token", null));
+            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-type", "application/json");
+
+            JSONObject data = new JSONObject();
+            data.put("heart_rate", Integer.valueOf(strings[0]));
+            data.put("rr_interval", Float.valueOf(strings[1]));
+            data.put("timestamp", MySingletone.getInstance().getTimestamp());
+            data.put("lat", sp.getFloat("lat", 0));
+            data.put("lng", sp.getFloat("lng", 0));
+
+            OutputStream os = conn.getOutputStream();
+            os.write(data.toString().getBytes("UTF-8"));
+            os.flush();
+            os.close();
+
+            if(conn.getResponseCode() == HttpURLConnection.HTTP_OK){
+                InputStream is = conn.getInputStream();
+                BufferedReader buffer = new BufferedReader(new InputStreamReader(is));
+                String input = null;
+                StringBuilder sb = new StringBuilder();
+                while((input = buffer.readLine()) != null){
+                    Log.i("JADE-INPUT", input);
+                    sb.append(input);
+                }
+
+                JSONObject response = new JSONObject(sb.toString());
+                if(response.getBoolean("success"))
+                    return StatusCode.SUCCESS;
+                else
+                    return StatusCode.FAILED;
+            }
+        }catch (Exception e){
+            Log.i("JADE-ERROR", e.toString());
+        }
+        return null;
+    }
+
+    @Override
+    protected void onPostExecute(Integer result) {
+        super.onPostExecute(result);
+    }
+}
+
+class HistoricalHeartDataTask extends Tasks{
+    public HistoricalHeartDataTask(Handler handler, SharedPreferences sp) {
+        super(handler, sp);
+    }
+
+    @Override
+    protected Integer doInBackground(String... strings) {
+        try{
+            URL url = new URL("http://192.241.221.155:8081/api/data/heart/history/"
+                    +strings[0]+"/"+strings[1]+"/"+strings[2]+"/"+strings[3]+"/" + sp.getString("token", null));
+            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+            conn.setRequestMethod("GET");
+
+            if(conn.getResponseCode() == HttpURLConnection.HTTP_OK){
+                InputStream is = conn.getInputStream();
+                BufferedReader buffer = new BufferedReader(new InputStreamReader(is));
+                String input = null;
+                StringBuilder sb = new StringBuilder();
+                while((input = buffer.readLine()) != null){
+                    Log.i("JADE-HISTORICAL-HEART", input);
+                    sb.append(input);
+                }
+
+                JSONObject response = new JSONObject(sb.toString());
+                if(response.getBoolean("success")) {
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putString(StatusCode.HISTROICAL_HEART, sb.toString());
+                    editor.commit();
+                    return StatusCode.SUCCESS;
+                }
+                else
+                    return StatusCode.FAILED;
+            }
+        } catch (Exception e){
+            Log.i("JADE-ERROR", e.toString());
+        }
+        return null;
+    }
+
+    @Override
+    protected void onPostExecute(Integer result) {
+        super.onPostExecute(result);
+    }
+}
+
+class AirDataTransfer extends Tasks{
+    public AirDataTransfer(Handler handler, SharedPreferences sp) {
+        super(handler, sp);
+    }
+
+    @Override
+    protected Integer doInBackground(String... strings) {
+        try{
+            URL url = new URL("http://192.241.221.155:8081/api/data/rawair/insert/"
+                    + sp.getString("token", null));
+            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-type", "application/json");
+
+            JSONObject data = new JSONObject();
+            data.put("CO", Float.valueOf(strings[0]));
+            data.put("NO2", Float.valueOf(strings[1]));
+            data.put("SO2", Float.valueOf(strings[2]));
+            data.put("O3", Float.valueOf(strings[3]));
+            data.put("temperature", Float.valueOf(strings[4]));
+            data.put("timestamp", MySingletone.getInstance().getTimestamp());
+            data.put("lat", sp.getFloat("lat", 0));
+            data.put("lng", sp.getFloat("lng", 0));
+            data.put("SSN",Integer.valueOf(strings[5]));
+
+            OutputStream os = conn.getOutputStream();
+            os.write(data.toString().getBytes("UTF-8"));
+            os.flush();
+            os.close();
+
+            if(conn.getResponseCode() == HttpURLConnection.HTTP_OK){
+                InputStream is = conn.getInputStream();
+                BufferedReader buffer = new BufferedReader(new InputStreamReader(is));
+                String input = null;
+                StringBuilder sb = new StringBuilder();
+                while((input = buffer.readLine()) != null){
+                    Log.i("JADE-INPUT", input);
+                    sb.append(input);
+                }
+
+                JSONObject response = new JSONObject(sb.toString());
+                if(response.getBoolean("success"))
+                    return StatusCode.SUCCESS;
+                else
+                    return StatusCode.FAILED;
+            }
+        }catch (Exception e){
+            Log.i("JADE-ERROR", e.toString());
+        }
+        return null;
+    }
+
+    @Override
+    protected void onPostExecute(Integer result) {
+        super.onPostExecute(result);
+    }
+}

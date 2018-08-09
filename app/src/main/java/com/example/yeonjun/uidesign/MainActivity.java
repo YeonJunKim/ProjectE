@@ -1,5 +1,6 @@
 package com.example.yeonjun.uidesign;
 
+import android.content.IntentFilter;
 import android.hardware.Sensor;
 import android.net.Uri;
 import android.support.design.widget.TabLayout;
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity
     SectionPageAdapter mSectionPageAdapter;
     NonSwipeableViewPager mViewPager;
     TextView accountIdText;
+    public static SharedPreferences sp;
 
     private void SetupViewPager(ViewPager viewPager){
         SectionPageAdapter adapter = new SectionPageAdapter(getSupportFragmentManager());
@@ -67,6 +69,9 @@ public class MainActivity extends AppCompatActivity
         mViewPager = (NonSwipeableViewPager) findViewById(R.id.viewPager);
         SetupViewPager(mViewPager);
         mViewPager.setOffscreenPageLimit(5);
+
+        sp = getSharedPreferences(getString(R.string.sh_pref), MODE_PRIVATE);
+        activatePolar();
     }
 
     @Override
@@ -145,4 +150,34 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    @Override
+    protected void onDestroy() {
+        if(BluetoothChatFragment.mChatService != null){
+            BluetoothChatFragment.resetDeviceInfo();
+            BluetoothChatFragment.mChatService.stop();
+        }
+        deactivatePolar();
+        SharedPreferences.Editor editor = sp.edit();
+        editor.clear();
+        super.onDestroy();
+    }
+
+    private final MyPolarBleReceiver mPolarBleUpdateReceiver = new MyPolarBleReceiver() {};
+
+    protected void activatePolar() {
+        Log.w(this.getClass().getName(), "activatePolar()");
+        registerReceiver(mPolarBleUpdateReceiver, makePolarGattUpdateIntentFilter());
+    }
+
+    protected void deactivatePolar() {
+        unregisterReceiver(mPolarBleUpdateReceiver);
+    }
+
+    private static IntentFilter makePolarGattUpdateIntentFilter() {
+        final IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(MyPolarBleReceiver.ACTION_GATT_CONNECTED);
+        intentFilter.addAction(MyPolarBleReceiver.ACTION_GATT_DISCONNECTED);
+        intentFilter.addAction(MyPolarBleReceiver.ACTION_HR_DATA_AVAILABLE);
+        return intentFilter;
+    }
 }

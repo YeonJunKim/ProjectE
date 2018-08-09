@@ -16,14 +16,19 @@
 
 package com.example.yeonjun.uidesign;
 
+import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.io.IOException;
@@ -31,13 +36,14 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
 
+
 /**
  * This class does all the work for setting up and managing Bluetooth
  * connections with other devices. It has a thread that listens for
  * incoming connections, a thread for connecting with a device, and a
  * thread for performing data transmissions when connected.
  */
-public class BluetoothChatService {
+public class BluetoothChatService extends Service {
     // Debugging
     private static final String TAG = "BluetoothChatService";
 
@@ -52,7 +58,7 @@ public class BluetoothChatService {
 //            UUID.fromString("8ce255c0-200a-11e0-ac64-0800200c9a66");
 
     // Member fields
-    private final BluetoothAdapter mAdapter;
+    private BluetoothAdapter mAdapter;
     private final Handler mHandler;
     private AcceptThread mSecureAcceptThread;
     private AcceptThread mInsecureAcceptThread;
@@ -61,11 +67,53 @@ public class BluetoothChatService {
     private int mState;
     private int mNewState;
 
+    private BluetoothClass.Device device;
+    private String deviceName;
+    private String deviceMAC;
+
     // Constants that indicate the current connection state
     public static final int STATE_NONE = 0;       // we're doing nothing
     public static final int STATE_LISTEN = 1;     // now listening for incoming connections
     public static final int STATE_CONNECTING = 2; // now initiating an outgoing connection
     public static final int STATE_CONNECTED = 3;  // now connected to a remote device
+
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.d("PrinterService", "Onstart Command");
+        mAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (mAdapter != null) {
+            deviceName = mAdapter.getName();
+            deviceMAC = mAdapter.getAddress();
+            if (deviceMAC != null && deviceMAC.length() > 0) {
+                //connectToDevice(macAddress);
+                //connect();
+            } else {
+                stopSelf();
+            }
+        }
+        String stopservice = intent.getStringExtra("stopservice");
+        if (stopservice != null && stopservice.length() > 0) {
+            stop();
+        }
+        return START_STICKY;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
 
     /**
      * Constructor. Prepares a new BluetoothChat session.

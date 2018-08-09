@@ -13,7 +13,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-public class GPSCollecter extends Service{
+public class GPSCollecter extends Service {
     private LocationManager lm;
     private SharedPreferences.Editor editor;
     private LocationListener GPSListener;
@@ -65,8 +65,8 @@ public class GPSCollecter extends Service{
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 500, 1, GPSListener);
-        lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 500, 1, GPSListener);
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, GPSListener);
+        lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, GPSListener);
         return super.onStartCommand(intent, flags, startId);
     }
 }
