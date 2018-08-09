@@ -11,13 +11,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/lineChart"
+            android:layout_width="match_parent"
+            android:layout_height="398dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"></com.github.mikephil.charting.charts.LineChart>
+
         <Spinner
             android:id="@+id/objectSpinner"
             android:layout_width="181dp"
             android:layout_height="56dp"
             android:layout_marginBottom="50dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp"
+            android:layout_marginLeft="28dp"
+            android:layout_marginStart="28dp"
             android:layout_marginTop="8dp"
             android:background="@android:drawable/btn_dropdown"
             android:overlapAnchor="false"
@@ -25,7 +34,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/lineChart"
-            app:layout_constraintVertical_bias="0.263" />
+            app:layout_constraintVertical_bias="0.21" />
 
         <Spinner
             android:id="@+id/dateSpinner"
@@ -45,15 +54,35 @@
             app:layout_constraintHorizontal_bias="0.44"
             app:layout_constraintStart_toEndOf="@+id/objectSpinner"
             app:layout_constraintTop_toBottomOf="@+id/lineChart"
-            app:layout_constraintVertical_bias="0.263" />
+            app:layout_constraintVertical_bias="0.212" />
 
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/lineChart"
-            android:layout_width="match_parent"
-            android:layout_height="427dp"
-            app:layout_constraintEnd_toEndOf="parent"
+        <TextView
+            android:id="@+id/yAxisTextView"
+            android:layout_width="45dp"
+            android:layout_height="22dp"
+            android:layout_marginLeft="36dp"
+            android:layout_marginStart="36dp"
+            android:layout_marginTop="4dp"
+            android:text="AQI"
+            android:textSize="8pt"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"></com.github.mikephil.charting.charts.LineChart>
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/xAxisTextView"
+            android:layout_width="45dp"
+            android:layout_height="22dp"
+            android:layout_marginLeft="348dp"
+            android:layout_marginStart="348dp"
+            android:layout_marginTop="332dp"
+            android:text="Date"
+            android:textSize="8pt"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </android.support.constraint.ConstraintLayout>
 
 </FrameLayout>

@@ -157,11 +157,11 @@ public class BluetoothChatFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         mConversationView = (ListView) view.findViewById(R.id.in);
 
-        sensorListAdapter = new SensorListAdapter(getActivity(), getActivity()
-                .getSharedPreferences(getString(R.string.sh_pref), Context.MODE_PRIVATE)
-                .getString(StatusCode.LIST_SENSOR, null));
-
-        mConversationView.setAdapter(sensorListAdapter);
+//        sensorListAdapter = new SensorListAdapter(getActivity(), getActivity()
+//                .getSharedPreferences(getString(R.string.sh_pref), Context.MODE_PRIVATE)
+//                .getString(StatusCode.LIST_SENSOR, null));
+//
+//        mConversationView.setAdapter(sensorListAdapter);
     }
 
     /**

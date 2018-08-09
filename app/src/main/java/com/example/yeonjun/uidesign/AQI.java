@@ -4,7 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class AQI {
-    private Double CO, NO2, SO2, O3, temp;
+    private double CO, NO2, SO2, O3, temp;
     private String time;
 
     public AQI(JSONObject obj) {
@@ -12,6 +12,7 @@ public class AQI {
             CO = obj.getDouble("CO");
             NO2 = obj.getDouble("NO2");
             SO2 = obj.getDouble("SO2");
+            O3 = obj.getDouble("O3");
             temp = obj.getDouble("temperature");
             time = obj.getString("timestamp");
         } catch (Exception e){

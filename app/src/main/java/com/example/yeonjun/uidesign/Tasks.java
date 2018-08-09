@@ -36,8 +36,10 @@ public class Tasks extends AsyncTask<String, Void, Integer> {
 
     @Override
     protected void onPostExecute(Integer result) {
-        Message msg = handler.obtainMessage(result);
-        handler.sendMessage(msg);
+        if(result != null) {
+            Message msg = handler.obtainMessage(result);
+            handler.sendMessage(msg);
+        }
     }
 }
 
