@@ -683,6 +683,8 @@ class HeartDataTransferTask extends Tasks{
             data.put("lat", sp.getFloat("lat", 0));
             data.put("lng", sp.getFloat("lng", 0));
 
+            Log.i("JADE-HEART_TRF", data.toString());
+
             OutputStream os = conn.getOutputStream();
             os.write(data.toString().getBytes("UTF-8"));
             os.flush();

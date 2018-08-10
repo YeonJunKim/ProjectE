@@ -200,7 +200,7 @@ public class BluetoothChatFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 final String SSN = ((TextView)view.findViewById(R.id.itemSSN)).getText().toString();
                 final String MAC = ((TextView)view.findViewById(R.id.itemMAC)).getText().toString();
-                String Device = ((TextView)view.findViewById(R.id.itemDeviceName)).getText().toString();
+                final String Device = ((TextView)view.findViewById(R.id.itemDeviceName)).getText().toString();
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle("Sensor Info");
@@ -210,9 +210,10 @@ public class BluetoothChatFragment extends Fragment {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 if(MySingletone.getInstance().isMACValid(MAC)) {
-                                    new SensorDeregisterTask(mHandler, getActivity()
-                                            .getSharedPreferences(getString(R.string.sh_pref), Context.MODE_PRIVATE))
-                                            .execute(SSN);
+                                    BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(MAC);
+                                    mChatService.connect(device, true);
+                                    tvMAC.setText(MAC);
+                                    tvDeviceName.setText(Device);
                                 }
                                 else
                                     MySingletone.getInstance().ShowToastMessage("Invalid MAC address", getContext());
@@ -254,8 +255,8 @@ public class BluetoothChatFragment extends Fragment {
     }
 
     public static void resetDeviceInfo(){
-        deviceMAC = null;
-        deviceName = null;
+//        deviceMAC = "";
+//        deviceName = "";
     }
     /**
      * Set up the UI and background operations for chat.
@@ -310,14 +311,8 @@ public class BluetoothChatFragment extends Fragment {
      *
      * @param resId a string resource ID
      */
-    private void setStatus(int resId, int code) {
+    private void setStatus(int resId) {
         tvPairing.setText(resId);
-        if(code != StatusCode.SUCCESS) {
-            deviceMAC = "";
-            deviceName = "";
-            editor.remove(StatusCode.SSN);
-            editor.apply();
-        }
         tvMAC.setText(deviceMAC);
         tvDeviceName.setText(deviceName);
     }
@@ -327,14 +322,8 @@ public class BluetoothChatFragment extends Fragment {
      *
      * @param subTitle status
      */
-    private void setStatus(CharSequence subTitle, int code) {
+    private void setStatus(CharSequence subTitle) {
         tvPairing.setText(subTitle);
-        if(code != StatusCode.SUCCESS) {
-            deviceMAC = "";
-            deviceName = "";
-            editor.remove(StatusCode.SSN);
-            editor.apply();
-        }
         tvMAC.setText(deviceMAC);
         tvDeviceName.setText(deviceName);
     }
@@ -350,18 +339,23 @@ public class BluetoothChatFragment extends Fragment {
                 case Constants.MESSAGE_STATE_CHANGE:
                     switch (msg.arg1) {
                         case BluetoothChatService.STATE_CONNECTED:
-                            setStatus(getString(R.string.title_connected_to, mConnectedDeviceName),
-                                    StatusCode.SUCCESS);
+                            setStatus(getResources().getString(R.string.title_connected_to, mConnectedDeviceName));
                             new SensorRegisterTask(mHandler,
                                     getActivity().getSharedPreferences(getString(R.string.sh_pref), Context.MODE_PRIVATE))
                                     .execute(deviceMAC, deviceName);
+
                             break;
                         case BluetoothChatService.STATE_CONNECTING:
-                            setStatus(R.string.title_connecting, StatusCode.FAILED);
+                            setStatus(R.string.title_connecting);
                             break;
                         case BluetoothChatService.STATE_LISTEN:
+                            break;
                         case BluetoothChatService.STATE_NONE:
-                            setStatus(R.string.title_not_connected, StatusCode.FAILED);
+                            deviceMAC = "";
+                            deviceName = "";
+                            editor.remove(StatusCode.SSN);
+                            editor.apply();
+                            setStatus(R.string.title_not_connected);
                             break;
                     }
                     break;

@@ -43,7 +43,7 @@ import java.util.UUID;
  * incoming connections, a thread for connecting with a device, and a
  * thread for performing data transmissions when connected.
  */
-public class BluetoothChatService extends Service {
+public class BluetoothChatService{
     // Debugging
     private static final String TAG = "BluetoothChatService";
 
@@ -76,44 +76,6 @@ public class BluetoothChatService extends Service {
     public static final int STATE_LISTEN = 1;     // now listening for incoming connections
     public static final int STATE_CONNECTING = 2; // now initiating an outgoing connection
     public static final int STATE_CONNECTED = 3;  // now connected to a remote device
-
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-    }
-
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d("PrinterService", "Onstart Command");
-        mAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (mAdapter != null) {
-            deviceName = mAdapter.getName();
-            deviceMAC = mAdapter.getAddress();
-            if (deviceMAC != null && deviceMAC.length() > 0) {
-                //connectToDevice(macAddress);
-                //connect();
-            } else {
-                stopSelf();
-            }
-        }
-        String stopservice = intent.getStringExtra("stopservice");
-        if (stopservice != null && stopservice.length() > 0) {
-            stop();
-        }
-        return START_STICKY;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
 
     /**
      * Constructor. Prepares a new BluetoothChat session.
