@@ -76,6 +76,7 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
                         Log.i("JADE-ERROR", e.toString());
                     }
                     break;
+
                 case StatusCode.GET_HISTORICAL_HEART:
                     try {
                         JSONObject response = new JSONObject(sp.getString(StatusCode.HISTROICAL_HEART, null));
@@ -85,6 +86,7 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
                     } catch (Exception e){
                         Log.i("JADE-ERROR", e.toString());
                     }
+
                 case StatusCode.FAILED:
                     MySingletone.getInstance().ShowToastMessage("failed data load", getContext());
                     break;
@@ -284,7 +286,6 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
 
 
     void UpdateChart() {
-
         ArrayList<Entry> yValues = new ArrayList<>();
         ArrayList<Float> values;
         xValues.clear();
@@ -376,6 +377,7 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
 
         mChart.invalidate();
+
     }
 
 
@@ -502,8 +504,6 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
                 count++;
             }
             else {
-                Log.d("count", Integer.toString(count));
-                Log.d("valueSum", Float.toString(valueSum));
                 values.add(valueSum / count);
                 valueSum = GetCurrentObjectValue(i);
                 sliceCount++;
