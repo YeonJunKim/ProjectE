@@ -31,6 +31,12 @@ public class RealTimeFragment extends Fragment {
     TextView so2NumberTextView;
     Handler handler = new Handler();
 
+    float aqi = 32;
+    float o3 = 22;
+    float no2 = 11;
+    float so2 = 3;
+    float co = 44;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -67,11 +73,11 @@ public class RealTimeFragment extends Fragment {
 
 
                             // TODO Auto-generated method stub
-                            Faaaaaaaaaaaaaaaake(aqiProgressBar, aqiNumberTextView);
-                            Faaaaaaaaaaaaaaaake(coProgressBar, coNumberTextView);
-                            Faaaaaaaaaaaaaaaake(o3ProgressBar, o3NumberTextView);
-                            Faaaaaaaaaaaaaaaake(no2ProgressBar, no2NumberTextView);
-                            Faaaaaaaaaaaaaaaake(so2ProgressBar, so2NumberTextView);
+                            Faaaaaaaaaaaaaaaake(aqiProgressBar, aqiNumberTextView, GetFakeChange(aqi, 0, 500));
+                            Faaaaaaaaaaaaaaaake(coProgressBar, coNumberTextView, GetFakeChange(co, 0, 500));
+                            Faaaaaaaaaaaaaaaake(o3ProgressBar, o3NumberTextView, GetFakeChange(o3, 0, 500));
+                            Faaaaaaaaaaaaaaaake(no2ProgressBar, no2NumberTextView, GetFakeChange(no2, 0, 500));
+                            Faaaaaaaaaaaaaaaake(so2ProgressBar, so2NumberTextView, GetFakeChange(so2, 0, 500));
                         }
                     });
                     try {
@@ -86,28 +92,51 @@ public class RealTimeFragment extends Fragment {
         }).start();
     }
 
-    void Faaaaaaaaaaaaaaaake(ProgressBar bar, TextView text) {
-        Random r = new Random();
-        int randNum = r.nextInt(100 - 0) + 0;
+    void Faaaaaaaaaaaaaaaake(ProgressBar bar, TextView text, float value) {
 
-        bar.setProgress(randNum);
-        text.setText(Integer.toString(randNum));
+        bar.setProgress(100);
+        text.setText(Integer.toString((int)value));
 
         String color;
-        if(randNum > 85)
+        if(value > 300)
             color = "#7E0023";
-        else if(randNum > 70)
+        else if(value > 200)
             color = "#99004C";
-        else if(randNum > 55)
+        else if(value > 150)
             color = "#FF0000";
-        else if(randNum > 40)
+        else if(value > 100)
             color = "#FF7E00";
-        else if(randNum > 25)
+        else if(value > 50)
             color = "#FFFF00";
         else
             color = "#00E400";
 
         bar.getProgressDrawable().setColorFilter(Color.parseColor(color), android.graphics.PorterDuff.Mode.SRC_IN);
+    }
+
+
+    float GetFakeChange(float originalValue, int min, int max) {
+        int sign = 1;
+        int changeAmount = 0;
+
+        Random r = new Random();
+        int randNum;
+        randNum = r.nextInt(100 - 0) + 0;
+        if(randNum < 50) {
+            sign = -1;
+        }
+
+        changeAmount = r.nextInt(3 - 0) + 0;
+
+        float changedValue = originalValue;
+        changedValue += changeAmount * sign;
+        if(changedValue < min)
+            changedValue = min;
+        if(changedValue > max) {
+            changedValue = max;
+        }
+
+        return  changedValue;
     }
 
 }

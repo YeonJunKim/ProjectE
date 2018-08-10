@@ -75,28 +75,27 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         AQICircle a0 = new AQICircle();
         a0.setPos(QI_LAT_LNG);
-        a0.SetValues(0, 50, 50, 50, 50, 50);
+        a0.SetValues(0, 25, 25, 25, 25, 25, 25);
         AQICircle a1 = new AQICircle();
         a1.setPos(THE_VILLAGE_LAT_LNG);
-        a1.SetValues(1, 60, 60, 60, 60, 60);
+        a1.SetValues(1, 60, 60, 60, 60, 60, 25);
         AQICircle a2 = new AQICircle();
         a2.setPos(SOMEWHERE);
-        a2.SetValues(2, 150,150, 150, 150, 150);
+        a2.SetValues(2, 150,150, 150, 150, 150, 25);
         AQICircle a3 = new AQICircle();
         a3.setPos(RALPHS);
-        a3.SetValues(3, 20, 20, 20, 20, 20);
+        a3.SetValues(3, 250, 250, 250, 250, 250, 25);
         AQICircle a4 = new AQICircle();
         a4.setPos(LA_JOLLA_SHORES);
-        a4.SetValues(4, 40, 40, 40, 40, 40);
+        a4.SetValues(4, 40, 40, 40, 40, 40, 25);
         AQICircle a5 = new AQICircle();
         a5.setPos(BLACKS_BEACH);
-        a5.SetValues(5, 35, 35, 35, 35, 35);
+        a5.SetValues(5, 35, 35, 35, 35, 35, 25);
 
         AQICircle a6 = new AQICircle();
         LatLng pos = new LatLng(sp.getFloat(StatusCode.LATITUDE, 0), sp.getFloat(StatusCode.LONGITUDE, 0));
         a6.setPos(pos);
-        Log.d("dddddddd", Double.toString(pos.latitude) + Double.toString(pos.longitude));
-        a6.SetValues(6, 40, 40, 40, 40, 40);
+        a6.SetValues(6, 25, 25, 25, 25, 25, 25);
 
         aqiCircles.add(a0);
         aqiCircles.add(a1);
@@ -239,6 +238,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             aqiCircles.get(i).setNo2(GetFakeChange(aqiCircles.get(i).getNo2(), 0, 500));
             aqiCircles.get(i).setO3(GetFakeChange(aqiCircles.get(i).getO3(), 0, 500));
             aqiCircles.get(i).setSo2(GetFakeChange(aqiCircles.get(i).getSo2(), 0, 500));
+            aqiCircles.get(i).setTemp(GetFakeChange(aqiCircles.get(i).getTemp(), 26, 32));
 
             drawCircle(aqiCircles.get(i).getPos(), GetAQIColor(aqiCircles.get(i).getAqi()));
         }
@@ -310,6 +310,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 String o3 = Float.toString(aqiCircle.getO3());
                 String no2 = Float.toString(aqiCircle.getNo2());
                 String so2 = Float.toString(aqiCircle.getSo2());
+                String temp = Float.toString(aqiCircle.getTemp());
                 Marker m =  map.addMarker(new MarkerOptions()
                         .alpha(0.0f)
                         .infoWindowAnchor(.6f,1.0f)
@@ -320,34 +321,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                 "CO: " + co + "\n" +
                                 "O3: " + o3 + "\n" +
                                 "NO2: " + no2 + "\n" +
-                                "SO2: " + so2 + "\n"));
+                                "SO2: " + so2 + "\n" +
+                                "Temp: " + temp + "℃" + "\n"));
 
                 m.showInfoWindow();
             }
         }
-    }
-
-
-    int GetRandomColor()
-    {
-        Random r = new Random();
-        int randNum = r.nextInt(100 - 0) + 0;
-
-        int color;
-        if(randNum > 85)
-            color = Color.argb(100, 126, 0, 35);
-        else if(randNum > 70)
-            color = Color.argb(100, 153, 0, 76);
-        else if(randNum > 55)
-            color = Color.argb(100, 255, 0, 0);
-        else if(randNum > 40)
-            color = Color.argb(100, 255, 126, 0);
-        else if(randNum > 25)
-            color = Color.argb(100, 255, 255, 0);
-        else
-            color = Color.argb(100, 0, 228, 0);
-
-        return color;
     }
 
 
@@ -417,6 +396,7 @@ class AQICircle {
     float o3;
     float no2;
     float so2;
+    float temp;
 
 
     public CircleOptions getCircle() {
@@ -428,13 +408,14 @@ class AQICircle {
         this.circle = circle;
     }
 
-    public void SetValues(int _ssn, float _aqi, float _co, float _o3, float _no2, float _so2) {
+    public void SetValues(int _ssn, float _aqi, float _co, float _o3, float _no2, float _so2, float _temp) {
         ssn = _ssn;
         aqi = _aqi;
         co = _co;
         o3 = _o3;
         no2 = _no2;
         so2 = _so2;
+        temp = _temp;
     }
 
     public LatLng getPos() {
@@ -467,6 +448,14 @@ class AQICircle {
 
     public float getSo2() {
         return so2;
+    }
+
+    public float getTemp() {
+        return temp;
+    }
+
+    public void setTemp(float temp) {
+        this.temp = temp;
     }
 
     public void setPos(LatLng pos) {
