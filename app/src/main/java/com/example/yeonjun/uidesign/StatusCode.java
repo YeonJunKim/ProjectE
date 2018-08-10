@@ -19,6 +19,7 @@ public interface StatusCode {
 
     public static final int GET_HISTORICAL_AQI = 41;
     public static final int GET_HISTORICAL_HEART = 42;
+    public static final int GET_HISTORICAL_APD = 43;
 
     public static final String TYPE_ID = "id";
     public static final String TYPE_EMAIL = "email";
@@ -28,6 +29,7 @@ public interface StatusCode {
     public static final String LIST_SENSOR = "listSensor";
     public static final String HISTROICAL_AQI = "historicalAQI";
     public static final String HISTROICAL_HEART = "historicalHeart";
+    public static final String HISTROICAL_APD = "historicalAPD";
 
     public static final String LONGITUDE = "lng";
     public static final String LATITUDE = "lat";

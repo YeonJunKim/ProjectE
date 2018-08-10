@@ -97,11 +97,17 @@ public class BluetoothChatFragment extends Fragment {
     Button btnUnpairing;
     TextView tvPairing, tvMAC, tvDeviceName;
     private static String deviceName, deviceMAC;
+    SharedPreferences sp;
+    SharedPreferences.Editor editor;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        sp = getActivity().getSharedPreferences(getString(R.string.sh_pref), Context.MODE_PRIVATE);
+        editor = sp.edit();
+
         // Get local Bluetooth adapter
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
@@ -175,6 +181,8 @@ public class BluetoothChatFragment extends Fragment {
                     mChatService.stop();
                     deviceMAC = "";
                     deviceName = "";
+                    editor.remove(StatusCode.SSN);
+                    editor.apply();
                 }
             }
         });
@@ -304,17 +312,14 @@ public class BluetoothChatFragment extends Fragment {
      */
     private void setStatus(int resId, int code) {
         tvPairing.setText(resId);
-        if(code == StatusCode.SUCCESS){
-            tvMAC.setText(deviceMAC);
-            tvDeviceName.setText(deviceName);
-        }
-        else{
-            SharedPreferences.Editor editor = MainActivity.sp.edit();
+        if(code != StatusCode.SUCCESS) {
+            deviceMAC = "";
+            deviceName = "";
             editor.remove(StatusCode.SSN);
             editor.apply();
-            tvMAC.setText("");
-            tvDeviceName.setText("");
         }
+        tvMAC.setText(deviceMAC);
+        tvDeviceName.setText(deviceName);
     }
 
     /**
@@ -324,10 +329,11 @@ public class BluetoothChatFragment extends Fragment {
      */
     private void setStatus(CharSequence subTitle, int code) {
         tvPairing.setText(subTitle);
-
         if(code != StatusCode.SUCCESS) {
             deviceMAC = "";
             deviceName = "";
+            editor.remove(StatusCode.SSN);
+            editor.apply();
         }
         tvMAC.setText(deviceMAC);
         tvDeviceName.setText(deviceName);

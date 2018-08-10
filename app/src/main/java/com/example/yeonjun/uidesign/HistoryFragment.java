@@ -64,6 +64,7 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
         public void handleMessage(Message msg) {
             mChart.clear();
             aqiArrayList.clear();
+            heartArrayList.clear();
             switch (msg.what){
                 case StatusCode.GET_HISTORICAL_AQI:
                     try {
@@ -75,15 +76,17 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
                         Log.i("JADE-ERROR", e.toString());
                     }
                     break;
-//                case StatusCode.GET_HISTORICAL_HEART:
-//                    try {
-//                        JSONObject response = new JSONObject(sp.getString(StatusCode.HISTROICAL_AQI, null));
-//                        JSONArray array = response.getJSONArray("data");
-//                        for(int i = 0; i < array.length(); i++)
-//                            aqiArrayList.add(new AQI(array.getJSONObject(i)));
-//                    } catch (Exception e){
-//                        Log.i("JADE-ERROR", e.toString());
-//                    }
+
+                case StatusCode.GET_HISTORICAL_HEART:
+                    try {
+                        JSONObject response = new JSONObject(sp.getString(StatusCode.HISTROICAL_HEART, null));
+                        JSONArray array = response.getJSONArray("data");
+                        for(int i = 0; i < array.length(); i++)
+                            heartArrayList.add(new HeartData(array.getJSONObject(i)));
+                    } catch (Exception e){
+                        Log.i("JADE-ERROR", e.toString());
+                    }
+
                 case StatusCode.FAILED:
                     MySingletone.getInstance().ShowToastMessage("failed data load", getContext());
                     break;
@@ -92,6 +95,7 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
         }
     };
     ArrayList<AQI> aqiArrayList = new ArrayList<AQI>();
+    ArrayList<HeartData> heartArrayList = new ArrayList<HeartData>();
 
     SharedPreferences sp;
 

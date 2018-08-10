@@ -626,7 +626,7 @@ class HistoricalAQITask extends Tasks{
     protected Integer doInBackground(String... strings) {
         try{
             URL url = new URL("http://192.241.221.155:8081/api/data/aqi/history/"
-            +strings[0]+"/"+strings[1]+"/"+strings[2]+"/"+strings[3]+"/2/" + sp.getString("token", null));
+            +strings[0]+"/"+strings[1]+"/"+strings[2]+"/"+strings[3]+"/"+ sp.getString("token", null));
             HttpURLConnection conn = (HttpURLConnection)url.openConnection();
             conn.setRequestMethod("GET");
 
@@ -744,7 +744,7 @@ class HistoricalHeartDataTask extends Tasks{
                     SharedPreferences.Editor editor = sp.edit();
                     editor.putString(StatusCode.HISTROICAL_HEART, sb.toString());
                     editor.commit();
-                    return StatusCode.SUCCESS;
+                    return StatusCode.GET_HISTORICAL_HEART;
                 }
                 else
                     return StatusCode.FAILED;
@@ -761,8 +761,53 @@ class HistoricalHeartDataTask extends Tasks{
     }
 }
 
-class AirDataTransfer extends Tasks{
-    public AirDataTransfer(Handler handler, SharedPreferences sp) {
+class HistoricalAPDTask extends Tasks{
+    public HistoricalAPDTask(Handler handler, SharedPreferences sp) {
+        super(handler, sp);
+    }
+
+    @Override
+    protected Integer doInBackground(String... strings) {
+        try{
+            URL url = new URL("http://192.241.221.155:8081/api/data/rawair/history/"
+                    +strings[0]+"/"+strings[1]+"/"+strings[2]+"/"+strings[3]+"/"+ sp.getString("token", null));
+            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+            conn.setRequestMethod("GET");
+
+            if(conn.getResponseCode() == HttpURLConnection.HTTP_OK){
+                InputStream is = conn.getInputStream();
+                BufferedReader buffer = new BufferedReader(new InputStreamReader(is));
+                String input = null;
+                StringBuilder sb = new StringBuilder();
+                while((input = buffer.readLine()) != null){
+                    Log.i("JADE-HISTORICAL-APD", input);
+                    sb.append(input);
+                }
+
+                JSONObject response = new JSONObject(sb.toString());
+                if(response.getBoolean("success")) {
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putString(StatusCode.HISTROICAL_APD, sb.toString());
+                    editor.commit();
+                    return StatusCode.GET_HISTORICAL_APD;
+                }
+                else
+                    return StatusCode.FAILED;
+            }
+        } catch (Exception e){
+            Log.i("JADE-ERROR", e.toString());
+        }
+        return null;
+    }
+
+    @Override
+    protected void onPostExecute(Integer result) {
+        super.onPostExecute(result);
+    }
+}
+
+class APDTransferTask extends Tasks{
+    public APDTransferTask(Handler handler, SharedPreferences sp) {
         super(handler, sp);
     }
 
@@ -782,9 +827,67 @@ class AirDataTransfer extends Tasks{
             data.put("O3", Float.valueOf(strings[3]));
             data.put("temperature", Float.valueOf(strings[4]));
             data.put("timestamp", MySingletone.getInstance().getTimestamp());
-            data.put("lat", sp.getFloat("lat", 0));
-            data.put("lng", sp.getFloat("lng", 0));
-            data.put("SSN",Integer.valueOf(strings[5]));
+            data.put("lat", sp.getFloat(StatusCode.LATITUDE, 0));
+            data.put("lng", sp.getFloat(StatusCode.LONGITUDE, 0));
+            data.put("SSN",sp.getInt(StatusCode.SSN, -1));
+
+            OutputStream os = conn.getOutputStream();
+            os.write(data.toString().getBytes("UTF-8"));
+            os.flush();
+            os.close();
+
+            if(conn.getResponseCode() == HttpURLConnection.HTTP_OK){
+                InputStream is = conn.getInputStream();
+                BufferedReader buffer = new BufferedReader(new InputStreamReader(is));
+                String input = null;
+                StringBuilder sb = new StringBuilder();
+                while((input = buffer.readLine()) != null){
+                    Log.i("JADE-INPUT", input);
+                    sb.append(input);
+                }
+
+                JSONObject response = new JSONObject(sb.toString());
+                if(response.getBoolean("success"))
+                    return StatusCode.SUCCESS;
+                else
+                    return StatusCode.FAILED;
+            }
+        }catch (Exception e){
+            Log.i("JADE-ERROR", e.toString());
+        }
+        return null;
+    }
+
+    @Override
+    protected void onPostExecute(Integer result) {
+        super.onPostExecute(result);
+    }
+}
+
+class AQITransferTask extends Tasks{
+    public AQITransferTask(Handler handler, SharedPreferences sp) {
+        super(handler, sp);
+    }
+
+    @Override
+    protected Integer doInBackground(String... strings) {
+        try{
+            URL url = new URL("http://192.241.221.155:8081/api/data/aqi/insert/"
+                    + sp.getString("token", null));
+            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-type", "application/json");
+
+            JSONObject data = new JSONObject();
+            data.put("CO", Float.valueOf(strings[0]));
+            data.put("NO2", Float.valueOf(strings[1]));
+            data.put("SO2", Float.valueOf(strings[2]));
+            data.put("O3", Float.valueOf(strings[3]));
+            data.put("temperature", Float.valueOf(strings[4]));
+            data.put("timestamp", MySingletone.getInstance().getTimestamp());
+            data.put("lat", sp.getFloat(StatusCode.LATITUDE, 0));
+            data.put("lng", sp.getFloat(StatusCode.LONGITUDE, 0));
+            data.put("SSN",sp.getInt(StatusCode.SSN, -1));
 
             OutputStream os = conn.getOutputStream();
             os.write(data.toString().getBytes("UTF-8"));
