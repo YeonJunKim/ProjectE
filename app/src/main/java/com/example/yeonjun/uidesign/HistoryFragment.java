@@ -64,6 +64,7 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
         public void handleMessage(Message msg) {
             mChart.clear();
             aqiArrayList.clear();
+            heartArrayList.clear();
             switch (msg.what){
                 case StatusCode.GET_HISTORICAL_AQI:
                     try {
@@ -77,10 +78,10 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
                     break;
                 case StatusCode.GET_HISTORICAL_HEART:
                     try {
-                        JSONObject response = new JSONObject(sp.getString(StatusCode.HISTROICAL_AQI, null));
+                        JSONObject response = new JSONObject(sp.getString(StatusCode.HISTROICAL_HEART, null));
                         JSONArray array = response.getJSONArray("data");
                         for(int i = 0; i < array.length(); i++)
-                            aqiArrayList.add(new AQI(array.getJSONObject(i)));
+                            heartArrayList.add(new HeartData(array.getJSONObject(i)));
                     } catch (Exception e){
                         Log.i("JADE-ERROR", e.toString());
                     }
@@ -92,6 +93,7 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
         }
     };
     ArrayList<AQI> aqiArrayList = new ArrayList<AQI>();
+    ArrayList<HeartData> heartArrayList = new ArrayList<HeartData>();
 
     SharedPreferences sp;
 
