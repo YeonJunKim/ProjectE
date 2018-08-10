@@ -112,16 +112,16 @@ public class MainActivity extends AppCompatActivity
             toolbar.setTitle("Drowsy Driving Detection");
             mViewPager.setCurrentItem(0);
         } else if (id == R.id.realTime) {
-            toolbar.setTitle("Real Time Data View");
+            toolbar.setTitle("Air Quality");
             mViewPager.setCurrentItem(1);
         } else if(id == R.id.heartView){
-            toolbar.setTitle("Heart View");
+            toolbar.setTitle("Heart");
             mViewPager.setCurrentItem(2);
         } else if (id == R.id.mapView) {
             toolbar.setTitle("Map View");
             mViewPager.setCurrentItem(3);
         } else if (id == R.id.history) {
-            toolbar.setTitle("History Data View");
+            toolbar.setTitle("History");
             mViewPager.setCurrentItem(4);
         } else if(id == R.id.sensor) {
             toolbar.setTitle("Sensor View");

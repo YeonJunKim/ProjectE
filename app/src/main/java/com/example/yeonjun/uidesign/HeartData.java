@@ -3,32 +3,33 @@ package com.example.yeonjun.uidesign;
 import org.json.JSONObject;
 
 public class HeartData {
-    private float heartRate, rrInterval;
+    private Integer heartRate;
+    private Double rrInterval;
     private String time;
 
     public HeartData(JSONObject obj) {
         try {
-            heartRate = (float)obj.getDouble("heart_rate");
-            rrInterval = (float)obj.getDouble("rr_interval");
+            heartRate = obj.getInt("heart_rate");
+            rrInterval = obj.getDouble("rr_interval");
             time = obj.getString("timestamp");
         } catch (Exception e){
 
         }
     }
 
-    public float getHeartRate() {
+    public Integer getHeartRate() {
         return heartRate;
     }
 
-    public void setHeartRate(float heartRate) {
+    public void setHeartRate(Integer heartRate) {
         this.heartRate = heartRate;
     }
 
-    public float getRrInterval() {
+    public Double getRrInterval() {
         return rrInterval;
     }
 
-    public void setRrInterval(float rrInterval) {
+    public void setRrInterval(Double rrInterval) {
         this.rrInterval = rrInterval;
     }
 

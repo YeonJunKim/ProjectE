@@ -650,6 +650,9 @@ class HistoricalAQITask extends Tasks{
                 else
                     return StatusCode.FAILED;
             }
+            else{
+                return StatusCode.FAILED;
+            }
         } catch (Exception e){
             Log.i("JADE-ERROR", e.toString());
         }
@@ -749,6 +752,9 @@ class HistoricalHeartDataTask extends Tasks{
                 else
                     return StatusCode.FAILED;
             }
+            else{
+                return StatusCode.FAILED;
+            }
         } catch (Exception e){
             Log.i("JADE-ERROR", e.toString());
         }
@@ -793,6 +799,9 @@ class HistoricalAPDTask extends Tasks{
                 }
                 else
                     return StatusCode.FAILED;
+            }
+            else{
+                return StatusCode.FAILED;
             }
         } catch (Exception e){
             Log.i("JADE-ERROR", e.toString());

@@ -51,7 +51,7 @@ public class HeartFragment extends Fragment {
         Glide.with(this).asGif().load(R.raw.heartbeat).into(ivHeartbeat);
 
         ivHeartbeat2 = view.findViewById(R.id.ivHeartbeat2);
-        Glide.with(this).asGif().load(R.raw.heartbeat2).into(ivHeartbeat2);
+        Glide.with(this).asGif().load(R.raw.heartbeat3).into(ivHeartbeat2);
 
         monitorHeart = view.findViewById(R.id.monitorHeart);
         monitorRR = view.findViewById(R.id.monitorRR);

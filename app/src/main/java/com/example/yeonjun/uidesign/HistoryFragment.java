@@ -62,6 +62,7 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
     Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
+            MySingletone.getInstance().HideProgressBar();
             mChart.clear();
             aqiArrayList.clear();
             heartArrayList.clear();
@@ -84,8 +85,9 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
                         for(int i = 0; i < array.length(); i++)
                             heartArrayList.add(new HeartData(array.getJSONObject(i)));
                     } catch (Exception e){
-                        Log.i("JADE-ERROR", e.toString());
+                        Log.i("JADE-ERROR-GET-HEART", e.toString());
                     }
+                    break;
 
                 case StatusCode.FAILED:
                     MySingletone.getInstance().ShowToastMessage("failed data load", getContext());
@@ -183,9 +185,7 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
                         selectedObject = "Temperature";
                         break;
                 }
-
-                ArrayList<String> dateList = CalculateDate(selectedDateTerm);
-                new HistoricalAQITask(mHandler, sp).execute(dateList.get(0), dateList.get(1), dateList.get(2), dateList.get(3));
+                GetDataFromServer();
             }
 
             @Override
@@ -203,7 +203,6 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
-                ArrayList<String> dateList;
                 switch (position) {
                     case 0: // 1 DAY
                         selectedDateTerm = "DAY";
@@ -216,8 +215,7 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
                         break;
                 }
 
-                dateList = CalculateDate(selectedDateTerm);
-                new HistoricalAQITask(mHandler, sp).execute(dateList.get(0), dateList.get(1), dateList.get(2), dateList.get(3));
+                GetDataFromServer();
             }
 
             @Override
@@ -246,6 +244,10 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
     ArrayList<String> CalculateDate(String when) {
 
         ArrayList<String> dateList = new ArrayList<String>();
+        String currentDate;
+        String currentTime;
+        String startTime;
+        String startDate;
 
         int year = Calendar.getInstance().get(Calendar.YEAR);
         int month = Calendar.getInstance().get(Calendar.MONTH) + 1; // in java month starts from 0 not from 1 so for december 11+1 = 12
@@ -253,31 +255,87 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
         int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
         int minute = Calendar.getInstance().get(Calendar.MINUTE);
         int second = Calendar.getInstance().get(Calendar.SECOND);
-        String startDate;
-        String currentDate = Integer.toString(year) + "-" + Integer.toString(month) + "-" + Integer.toString(day);
-        String currentTime = Integer.toString(hour) + ":" + Integer.toString(minute) + ":" + Integer.toString(second);
+
+        String time;
+        if(hour < 10 && minute < 10){
+            time = "0" + Integer.toString(hour) + ":0" + Integer.toString(minute) + ":" + Integer.toString(second);
+        }
+        else if(minute < 10) {
+            time = Integer.toString(hour) + ":0" + Integer.toString(minute) + ":" + Integer.toString(second);
+        }
+        else if(hour < 10) {
+            time = "0" + Integer.toString(hour) + ":" + Integer.toString(minute) + ":" + Integer.toString(second);
+        }
+        else {
+            time = Integer.toString(hour) + ":" + Integer.toString(minute) + ":" + Integer.toString(second);
+        }
+        currentTime = time;
+
+        String date;
+        if(month < 10 && day < 10){
+            date = Integer.toString(year) + "-0" + Integer.toString(month) + "-0" + Integer.toString(day) + "T" + time;
+        }
+        else if(month < 10) {
+            date = Integer.toString(year) + "-0" + Integer.toString(month) + "-" + Integer.toString(day) + "T" + time;
+        }
+        else if(day < 10) {
+            date = Integer.toString(year) + "-" + Integer.toString(month) + "-0" + Integer.toString(day) + "T" + time;
+        }
+        else {
+            date = Integer.toString(year) + "-" + Integer.toString(month) + "-" + Integer.toString(day) + "T" + time;
+        }
+        currentDate = date;
+
+
+        Calendar cal = Calendar.getInstance();
 
         if(when.contentEquals("WEEK")) {
-            day = day - 7;
+            cal.add(Calendar.DATE, -8);
         }
         else if (when.contentEquals("MONTH")) {
-            month--;
+            cal.add(Calendar.DATE, -35);
         }
         else {  // 1 DAY
-            day = day - 1;
+            cal.add(Calendar.HOUR, -28); // divide
         }
 
-        if(day <= 0) {
-            day = Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH - day);
-            month--;
+        year = cal.get(Calendar.YEAR);
+        month = cal.get(Calendar.MONTH) + 1; // in java month starts from 0 not from 1 so for december 11+1 = 12
+        day = cal.get(Calendar.DAY_OF_MONTH);
+        hour = cal.get(Calendar.HOUR_OF_DAY);
+        minute = cal.get(Calendar.MINUTE);
+        second = cal.get(Calendar.SECOND);
+
+        if(hour < 10 && minute < 10){
+            time = "0" + Integer.toString(hour) + ":0" + Integer.toString(minute) + ":" + Integer.toString(second);
         }
-        if(month <= 0) {
-            month = 12;
-            year--;
+        else if(minute < 10) {
+            time = Integer.toString(hour) + ":0" + Integer.toString(minute) + ":" + Integer.toString(second);
         }
-        startDate = Integer.toString(year) + "-" + Integer.toString(month) + "-" + Integer.toString(day);
+        else if(hour < 10) {
+            time = "0" + Integer.toString(hour) + ":" + Integer.toString(minute) + ":" + Integer.toString(second);
+        }
+        else {
+            time = Integer.toString(hour) + ":" + Integer.toString(minute) + ":" + Integer.toString(second);
+        }
+        startTime = time;
+
+        if(month < 10 && day < 10){
+            date = Integer.toString(year) + "-0" + Integer.toString(month) + "-0" + Integer.toString(day) + "T" + time;
+        }
+        else if(month < 10) {
+            date = Integer.toString(year) + "-0" + Integer.toString(month) + "-" + Integer.toString(day) + "T" + time;
+        }
+        else if(day < 10) {
+            date = Integer.toString(year) + "-" + Integer.toString(month) + "-0" + Integer.toString(day) + "T" + time;
+        }
+        else {
+            date = Integer.toString(year) + "-" + Integer.toString(month) + "-" + Integer.toString(day) + "T" + time;
+        }
+        startDate = date;
+
         dateList.add(startDate);
-        dateList.add(currentTime);
+        dateList.add(startTime);
         dateList.add(currentDate);
         dateList.add(currentTime);
 
@@ -286,6 +344,7 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
 
 
     void UpdateChart() {
+        MySingletone.getInstance().ShowProgressBar(getContext());
         ArrayList<Entry> yValues = new ArrayList<>();
         ArrayList<Float> values;
         xValues.clear();
@@ -334,7 +393,7 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
                 yAxisText.setText("Rate");
             }
             else if(selectedObject.contentEquals("RR-interval")) {
-                leftAxis.setAxisMaximum(500f);
+                leftAxis.setAxisMaximum(1600f);
                 leftAxis.setAxisMinimum(0);
                 yAxisText.setText("RR");
             }
@@ -376,8 +435,8 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
         xAxis.setTextSize(15);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
 
+        MySingletone.getInstance().HideProgressBar();
         mChart.invalidate();
-
     }
 
 
@@ -420,6 +479,7 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
 
             String temp = date.substring(5, 10);
             temp = temp.replace('-', '/');
+
             xValues.add(0, temp);
         }
 
@@ -428,20 +488,57 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
         int count = 0;
         float valueSum = 0;
         ArrayList<Float> values = new ArrayList<>();
-        for(int i = 0; i < aqiArrayList.size(); i++) {
 
-            if(aqiArrayList.get(i).getTime().compareTo(dividedDates.get(devideNum - 1 - sliceCount)) < 0){
-                valueSum += GetCurrentObjectValue(i);
-                count++;
+
+        if(selectedObject.contentEquals("Heart-rate")) {
+            for(int i = 0; i < heartArrayList.size(); i++) {
+
+                if(heartArrayList.get(i).getTime().compareTo(dividedDates.get(devideNum - 1 - sliceCount)) < 0){
+                    valueSum += GetCurrentObjectValue(i);
+                    count++;
+                }
+                else {
+                    values.add(valueSum / count);
+                    valueSum = GetCurrentObjectValue(i);
+                    sliceCount++;
+                    count = 1;
+                }
             }
-            else {
-                values.add(valueSum / count);
-                valueSum = GetCurrentObjectValue(i);
-                sliceCount++;
-                count = 1;
-            }
+            values.add(valueSum / count);
         }
-        values.add(valueSum / count);
+        else if(selectedObject.contentEquals("RR-interval")) {
+            for(int i = 0; i < heartArrayList.size(); i++) {
+
+                if(heartArrayList.get(i).getTime().compareTo(dividedDates.get(devideNum - 1 - sliceCount)) < 0){
+                    valueSum += GetCurrentObjectValue(i);
+                    count++;
+                }
+                else {
+                    values.add(valueSum / count);
+                    valueSum = GetCurrentObjectValue(i);
+                    sliceCount++;
+                    count = 1;
+                }
+            }
+            values.add(valueSum / count);
+        }
+        else {
+            for(int i = 0; i < aqiArrayList.size(); i++) {
+
+                if(aqiArrayList.get(i).getTime().compareTo(dividedDates.get(devideNum - 1 - sliceCount)) < 0){
+                    valueSum += GetCurrentObjectValue(i);
+                    count++;
+                }
+                else {
+                    values.add(valueSum / count);
+                    valueSum = GetCurrentObjectValue(i);
+                    sliceCount++;
+                    count = 1;
+                }
+            }
+            values.add(valueSum / count);
+        }
+
 
         for(int i = 0; i < devideNum - sliceCount - 1; i++) {
             values.add((float)0/0);
@@ -453,7 +550,6 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
 
 
     ArrayList<Float> GetMonthAverageData() {
-
         ArrayList<String> dividedDates = new ArrayList<>();
 
         Calendar cal = Calendar.getInstance();
@@ -490,6 +586,7 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
 
             String temp = date.substring(5, 10);
             temp = temp.replace('-', '/');
+
             xValues.add(0, temp);
         }
 
@@ -498,19 +595,54 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
         int count = 0;
         float valueSum = 0;
         ArrayList<Float> values = new ArrayList<>();
-        for(int i = 0; i < aqiArrayList.size(); i++) {
-            if(aqiArrayList.get(i).getTime().compareTo(dividedDates.get(devideNum - 1 - sliceCount)) < 0){
-                valueSum += GetCurrentObjectValue(i);
-                count++;
+        if(selectedObject.contentEquals("Heart-rate")) {
+            for(int i = 0; i < heartArrayList.size(); i++) {
+
+                if(heartArrayList.get(i).getTime().compareTo(dividedDates.get(devideNum - 1 - sliceCount)) < 0){
+                    valueSum += GetCurrentObjectValue(i);
+                    count++;
+                }
+                else {
+                    values.add(valueSum / count);
+                    valueSum = GetCurrentObjectValue(i);
+                    sliceCount++;
+                    count = 1;
+                }
             }
-            else {
-                values.add(valueSum / count);
-                valueSum = GetCurrentObjectValue(i);
-                sliceCount++;
-                count = 1;
-            }
+            values.add(valueSum / count);
         }
-        values.add(valueSum / count);
+        else if(selectedObject.contentEquals("RR-interval")) {
+            for(int i = 0; i < heartArrayList.size(); i++) {
+
+                if(heartArrayList.get(i).getTime().compareTo(dividedDates.get(devideNum - 1 - sliceCount)) < 0){
+                    valueSum += GetCurrentObjectValue(i);
+                    count++;
+                }
+                else {
+                    values.add(valueSum / count);
+                    valueSum = GetCurrentObjectValue(i);
+                    sliceCount++;
+                    count = 1;
+                }
+            }
+            values.add(valueSum / count);
+        }
+        else {
+            for(int i = 0; i < aqiArrayList.size(); i++) {
+
+                if(aqiArrayList.get(i).getTime().compareTo(dividedDates.get(devideNum - 1 - sliceCount)) < 0){
+                    valueSum += GetCurrentObjectValue(i);
+                    count++;
+                }
+                else {
+                    values.add(valueSum / count);
+                    valueSum = GetCurrentObjectValue(i);
+                    sliceCount++;
+                    count = 1;
+                }
+            }
+            values.add(valueSum / count);
+        }
 
         for(int i = 0; i < devideNum - sliceCount - 1; i++) {
             values.add((float)0/0);
@@ -528,8 +660,6 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
         Calendar cal = Calendar.getInstance();
         int devideNum = 7;
 
-
-
         for(int i = 0; i < devideNum; i++) {
             if(i != 0)
                 cal.add(Calendar.HOUR, -4); // dividedDates의 0번째 인덱스에 현재 날짜를 넣기 위해
@@ -540,7 +670,6 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
             int hour = cal.get(Calendar.HOUR_OF_DAY);
             int minute = cal.get(Calendar.MINUTE);
             int second = cal.get(Calendar.SECOND);
-
 
             String time;
             if(hour < 10 && minute < 10){
@@ -556,7 +685,6 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
                 time = Integer.toString(hour) + ":" + Integer.toString(minute) + ":" + Integer.toString(second);
             }
 
-
             String date;
             if(month < 10 && day < 10){
                 date = Integer.toString(year) + "-0" + Integer.toString(month) + "-0" + Integer.toString(day) + "T" + time;
@@ -571,10 +699,10 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
                 date = Integer.toString(year) + "-" + Integer.toString(month) + "-" + Integer.toString(day) + "T" + time;
             }
 
-
             dividedDates.add(date);
 
             String temp = date.substring(11, 16);
+
             xValues.add(0, temp);
         }
 
@@ -583,19 +711,55 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
         int count = 0;
         float valueSum = 0;
         ArrayList<Float> values = new ArrayList<>();
-        for(int i = 0; i < aqiArrayList.size(); i++) {
-            if(aqiArrayList.get(i).getTime().compareTo(dividedDates.get(devideNum - 1 - sliceCount)) < 0){
-                valueSum += GetCurrentObjectValue(i);
-                count++;
+
+        if(selectedObject.contentEquals("Heart-rate")) {
+            for(int i = 0; i < heartArrayList.size(); i++) {
+
+                if(heartArrayList.get(i).getTime().compareTo(dividedDates.get(devideNum - 1 - sliceCount)) < 0){
+                    valueSum += GetCurrentObjectValue(i);
+                    count++;
+                }
+                else {
+                    values.add(valueSum / count);
+                    valueSum = GetCurrentObjectValue(i);
+                    sliceCount++;
+                    count = 1;
+                }
             }
-            else {
-                values.add(valueSum / count);
-                valueSum = GetCurrentObjectValue(i);
-                sliceCount++;
-                count = 1;
-            }
+            values.add(valueSum / count);
         }
-        values.add(valueSum / count);
+        else if(selectedObject.contentEquals("RR-interval")) {
+            for(int i = 0; i < heartArrayList.size(); i++) {
+
+                if(heartArrayList.get(i).getTime().compareTo(dividedDates.get(devideNum - 1 - sliceCount)) < 0){
+                    valueSum += GetCurrentObjectValue(i);
+                    count++;
+                }
+                else {
+                    values.add(valueSum / count);
+                    valueSum = GetCurrentObjectValue(i);
+                    sliceCount++;
+                    count = 1;
+                }
+            }
+            values.add(valueSum / count);
+        }
+        else {
+            for(int i = 0; i < aqiArrayList.size(); i++) {
+
+                if(aqiArrayList.get(i).getTime().compareTo(dividedDates.get(devideNum - 1 - sliceCount)) < 0){
+                    valueSum += GetCurrentObjectValue(i);
+                    count++;
+                }
+                else {
+                    values.add(valueSum / count);
+                    valueSum = GetCurrentObjectValue(i);
+                    sliceCount++;
+                    count = 1;
+                }
+            }
+            values.add(valueSum / count);
+        }
 
         for(int i = 0; i < devideNum - sliceCount - 1; i++) {
             values.add((float)0/0);
@@ -614,10 +778,10 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
             //
         }
         else if(selectedObject.contentEquals("Heart-rate")) {
-            //
+            return heartArrayList.get(index).getHeartRate().floatValue();
         }
         else if(selectedObject.contentEquals("RR-interval")) {
-            //
+            return heartArrayList.get(index).getRrInterval().floatValue();
         }
         else if(selectedObject.contentEquals("CO")) {
             return aqiArrayList.get(index).getCO().floatValue();
@@ -639,6 +803,41 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
         }
 
         return 0;
+    }
+
+
+    void GetDataFromServer() {
+        MySingletone.getInstance().ShowProgressBar(getContext());
+        ArrayList<String> dateList;
+        dateList = CalculateDate(selectedDateTerm);
+
+        if(selectedObject.contentEquals("Drowsiness")){
+            MySingletone.getInstance().HideProgressBar();
+        }
+        else if(selectedObject.contentEquals("Heart-rate")) {
+            new HistoricalHeartDataTask(mHandler, sp).execute(dateList.get(0), dateList.get(1), dateList.get(2), dateList.get(3));
+        }
+        else if(selectedObject.contentEquals("RR-interval")) {
+            new HistoricalHeartDataTask(mHandler, sp).execute(dateList.get(0), dateList.get(1), dateList.get(2), dateList.get(3));
+        }
+        else if(selectedObject.contentEquals("CO")) {
+            new HistoricalAQITask(mHandler, sp).execute(dateList.get(0), dateList.get(1), dateList.get(2), dateList.get(3));
+        }
+        else if(selectedObject.contentEquals("CO2")) {
+            new HistoricalAQITask(mHandler, sp).execute(dateList.get(0), dateList.get(1), dateList.get(2), dateList.get(3));
+        }
+        else if(selectedObject.contentEquals("NO2")) {
+            new HistoricalAQITask(mHandler, sp).execute(dateList.get(0), dateList.get(1), dateList.get(2), dateList.get(3));
+        }
+        else if(selectedObject.contentEquals("SO2")) {
+            new HistoricalAQITask(mHandler, sp).execute(dateList.get(0), dateList.get(1), dateList.get(2), dateList.get(3));
+        }
+        else if(selectedObject.contentEquals("O3")) {
+            new HistoricalAQITask(mHandler, sp).execute(dateList.get(0), dateList.get(1), dateList.get(2), dateList.get(3));
+        }
+        else if(selectedObject.contentEquals("Temperature")) {
+            new HistoricalAQITask(mHandler, sp).execute(dateList.get(0), dateList.get(1), dateList.get(2), dateList.get(3));
+        }
     }
 
 
@@ -691,4 +890,5 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
     public void onNothingSelected() {
 
     }
+
 }

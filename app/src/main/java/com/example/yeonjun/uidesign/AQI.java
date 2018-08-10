@@ -4,7 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class AQI {
-    private double CO, NO2, SO2, O3, temp;
+    private Double CO, NO2, SO2, O3, temp;
     private String time;
 
     public AQI(JSONObject obj) {
