@@ -41,6 +41,9 @@ public class Tasks extends AsyncTask<String, Void, Integer> {
             Message msg = handler.obtainMessage(result);
             handler.sendMessage(msg);
         }
+        else{
+            Log.i("JADE-UNKNOWN", "Unknown error");
+        }
     }
 }
 
@@ -604,6 +607,9 @@ class SensorListTask extends Tasks{
                 }
                 else
                     return StatusCode.FAILED;
+            }
+            else{
+                Log.i("JADE-CONNECT", conn.getResponseMessage());
             }
         }catch (Exception e){
             Log.i("JADE-ERROR", e.toString());

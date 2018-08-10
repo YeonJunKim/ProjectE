@@ -118,8 +118,7 @@ public class BluetoothChatFragment extends Fragment {
             activity.finish();
         }
 
-        new SensorListTask(mHandler, getActivity()
-                .getSharedPreferences(getString(R.string.sh_pref), Context.MODE_PRIVATE)).execute();
+        new SensorListTask(mHandler, sp).execute();
     }
 
 
@@ -188,12 +187,10 @@ public class BluetoothChatFragment extends Fragment {
         });
 
         mConversationView = (ListView) view.findViewById(R.id.in);
-
-        sensorListAdapter = new SensorListAdapter(getActivity(), getActivity()
-                .getSharedPreferences(getString(R.string.sh_pref), Context.MODE_PRIVATE)
-                .getString(StatusCode.LIST_SENSOR, null));
-
-        mConversationView.setAdapter(sensorListAdapter);
+//
+//        sensorListAdapter = new SensorListAdapter(getActivity(), sp.getString(StatusCode.LIST_SENSOR, null));
+//
+//        mConversationView.setAdapter(sensorListAdapter);
 
         mConversationView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -252,6 +249,8 @@ public class BluetoothChatFragment extends Fragment {
                 builder.show();
             }
         });
+
+        new SensorListTask(mHandler, sp).execute();
     }
 
     public static void resetDeviceInfo(){
@@ -339,11 +338,10 @@ public class BluetoothChatFragment extends Fragment {
                 case Constants.MESSAGE_STATE_CHANGE:
                     switch (msg.arg1) {
                         case BluetoothChatService.STATE_CONNECTED:
-                            setStatus(getResources().getString(R.string.title_connected_to, mConnectedDeviceName));
-                            new SensorRegisterTask(mHandler,
-                                    getActivity().getSharedPreferences(getString(R.string.sh_pref), Context.MODE_PRIVATE))
-                                    .execute(deviceMAC, deviceName);
-
+                                setStatus(getResources().getString(R.string.title_connected_to, mConnectedDeviceName));
+                                new SensorRegisterTask(mHandler,
+                                        getActivity().getSharedPreferences(getString(R.string.sh_pref), Context.MODE_PRIVATE))
+                                        .execute(deviceMAC, deviceName);
                             break;
                         case BluetoothChatService.STATE_CONNECTING:
                             setStatus(R.string.title_connecting);
