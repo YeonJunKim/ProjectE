@@ -22,6 +22,9 @@ public class MySingletone {
     }
 
     public void ShowProgressBar (Context _context) {
+        if(dialog != null)
+            dialog.hide();
+
         dialog = new ProgressDialog(_context);
         // make the progress bar cancelable
         dialog.setCancelable(true);

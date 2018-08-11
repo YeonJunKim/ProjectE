@@ -631,7 +631,7 @@ class HistoricalAQITask extends Tasks{
     @Override
     protected Integer doInBackground(String... strings) {
         try{
-            URL url = new URL("http://192.241.221.155:8081/api/data/aqi/history/"
+            URL url = new URL("http://192.241.221.155:8081/api/data/aqi/historyall/"
             +strings[0]+"/"+strings[1]+"/"+strings[2]+"/"+strings[3]+"/"+ sp.getString("token", null));
             HttpURLConnection conn = (HttpURLConnection)url.openConnection();
             conn.setRequestMethod("GET");

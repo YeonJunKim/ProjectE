@@ -75,27 +75,27 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         AQICircle a0 = new AQICircle();
         a0.setPos(QI_LAT_LNG);
-        a0.SetValues(0, 25, 25, 25, 25, 25, 25);
+        a0.SetValues(0, 25, 25, 25, 25, 27);
         AQICircle a1 = new AQICircle();
         a1.setPos(THE_VILLAGE_LAT_LNG);
-        a1.SetValues(1, 60, 60, 60, 60, 60, 25);
+        a1.SetValues(1, 60, 60, 60, 60, 27);
         AQICircle a2 = new AQICircle();
         a2.setPos(SOMEWHERE);
-        a2.SetValues(2, 150,150, 150, 150, 150, 25);
+        a2.SetValues(2, 150,150, 150, 150, 27);
         AQICircle a3 = new AQICircle();
         a3.setPos(RALPHS);
-        a3.SetValues(3, 250, 250, 250, 250, 250, 25);
+        a3.SetValues(3, 250, 250, 250, 250, 27);
         AQICircle a4 = new AQICircle();
         a4.setPos(LA_JOLLA_SHORES);
-        a4.SetValues(4, 40, 40, 40, 40, 40, 25);
+        a4.SetValues(4, 40, 40, 40, 40, 27);
         AQICircle a5 = new AQICircle();
         a5.setPos(BLACKS_BEACH);
-        a5.SetValues(5, 35, 35, 35, 35, 35, 25);
+        a5.SetValues(5, 35, 35, 35, 35, 27);
 
         AQICircle a6 = new AQICircle();
         LatLng pos = new LatLng(sp.getFloat(StatusCode.LATITUDE, 0), sp.getFloat(StatusCode.LONGITUDE, 0));
         a6.setPos(pos);
-        a6.SetValues(6, 25, 25, 25, 25, 25, 25);
+        a6.SetValues(6, 25, 25, 25, 25, 27);
 
         aqiCircles.add(a0);
         aqiCircles.add(a1);
@@ -104,7 +104,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         aqiCircles.add(a4);
         aqiCircles.add(a5);
         aqiCircles.add(a6);
-
     }
 
     @Override
@@ -233,14 +232,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         for(int i = 0; i < aqiCircles.size(); i++) {
 
-            aqiCircles.get(i).setAqi(GetFakeChange(aqiCircles.get(i).getAqi(), 0, 500));
             aqiCircles.get(i).setCo(GetFakeChange(aqiCircles.get(i).getCo(), 0, 500));
             aqiCircles.get(i).setNo2(GetFakeChange(aqiCircles.get(i).getNo2(), 0, 500));
             aqiCircles.get(i).setO3(GetFakeChange(aqiCircles.get(i).getO3(), 0, 500));
             aqiCircles.get(i).setSo2(GetFakeChange(aqiCircles.get(i).getSo2(), 0, 500));
             aqiCircles.get(i).setTemp(GetFakeChange(aqiCircles.get(i).getTemp(), 26, 32));
+            aqiCircles.get(i).UpdateHighestValue();
 
-            drawCircle(aqiCircles.get(i).getPos(), GetAQIColor(aqiCircles.get(i).getAqi()));
+            drawCircle(aqiCircles.get(i).getPos(), GetAQIColor(aqiCircles.get(i).getHighestValue()));
         }
 
         UpdateInfoWindows();
@@ -294,7 +293,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     void UpdateInfoWindows() {
         for(int i = 0; i < aqiCircles.size(); i++) {
             AQICircle aqiCircle = aqiCircles.get(i);
-            String text =  Float.toString(aqiCircle.getAqi());
+            String text =  Float.toString(aqiCircle.getHighestValue());
 
             MarkerOptions markerOptions = new MarkerOptions()
                     .position(aqiCircle.getPos())
@@ -305,7 +304,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             if(aqiCircle.getShowOnMap() == true) {
 
                 String ssn = Integer.toString(aqiCircle.getSsn());
-                String aqi = Float.toString(aqiCircle.getAqi());
+                String aqi = Float.toString(aqiCircle.getHighestValue());
                 String co = Float.toString(aqiCircle.getCo());
                 String o3 = Float.toString(aqiCircle.getO3());
                 String no2 = Float.toString(aqiCircle.getNo2());
@@ -391,12 +390,19 @@ class AQICircle {
     boolean showOnMap = false;
     CircleOptions circle;
     int ssn;
-    float aqi;
+    float highestValue;
     float co;
     float o3;
     float no2;
     float so2;
     float temp;
+
+
+    public void UpdateHighestValue() {
+        highestValue = Math.max(co, o3);
+        highestValue = Math.max(highestValue, no2);
+        highestValue = Math.max(highestValue, so2);
+    }
 
 
     public CircleOptions getCircle() {
@@ -408,9 +414,8 @@ class AQICircle {
         this.circle = circle;
     }
 
-    public void SetValues(int _ssn, float _aqi, float _co, float _o3, float _no2, float _so2, float _temp) {
+    public void SetValues(int _ssn, float _co, float _o3, float _no2, float _so2, float _temp) {
         ssn = _ssn;
-        aqi = _aqi;
         co = _co;
         o3 = _o3;
         no2 = _no2;
@@ -430,8 +435,8 @@ class AQICircle {
         return ssn;
     }
 
-    public float getAqi() {
-        return aqi;
+    public float getHighestValue() {
+        return highestValue;
     }
 
     public float getCo() {
@@ -470,9 +475,6 @@ class AQICircle {
         this.ssn = ssn;
     }
 
-    public void setAqi(float aqi) {
-        this.aqi = aqi;
-    }
 
     public void setCo(float co) {
         this.co = co;

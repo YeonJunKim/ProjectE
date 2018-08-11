@@ -42,6 +42,8 @@ public class LoginActivity extends AppCompatActivity {
                             getApplicationContext(),
                             MainActivity.class);
                     intent.putExtra("id", idEditText.getText().toString());
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                     break;
                 case StatusCode.FAILED:
