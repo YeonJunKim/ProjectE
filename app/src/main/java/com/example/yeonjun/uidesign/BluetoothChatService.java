@@ -52,9 +52,9 @@ public class BluetoothChatService{
     private static final String NAME_INSECURE = "BluetoothChatInsecure";
 
     // Unique UUID for this application
-    private static final UUID MY_UUID_SECURE = UUID.fromString("94f39d29-7d6d-437d-973b-fba39e49d4ee");
+    private static final UUID MY_UUID_SECURE = UUID.fromString("c829e6e4-1410-406d-963b-b6ecbe632386");
 //            UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66");
-    private static final UUID MY_UUID_INSECURE = UUID.fromString("94f39d29-7d6d-437d-973b-fba39e49d4ee");
+    private static final UUID MY_UUID_INSECURE = UUID.fromString("c829e6e4-1410-406d-963b-b6ecbe632386");
 //            UUID.fromString("8ce255c0-200a-11e0-ac64-0800200c9a66");
 
     // Member fields
