@@ -95,7 +95,7 @@ public class BluetoothChatFragment extends Fragment {
     public static BluetoothChatService mChatService = null;
 
     Button btnUnpairing;
-    TextView tvPairing, tvMAC, tvDeviceName;
+    TextView connectedStatus, connectedMac, connectedDevice;
     private static String deviceName, deviceMAC;
     SharedPreferences sp;
     SharedPreferences.Editor editor;
@@ -168,9 +168,9 @@ public class BluetoothChatFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        tvPairing = view.findViewById(R.id.tvPairing);
-        tvMAC = view.findViewById(R.id.tvMAC);
-        tvDeviceName = view.findViewById(R.id.tvDeviceName);
+        connectedStatus = view.findViewById(R.id.connectedStatus);
+        connectedMac = view.findViewById(R.id.connectedMac);
+        connectedDevice = view.findViewById(R.id.connectedDevice);
 
         btnUnpairing = view.findViewById(R.id.btnUnpairing);
         btnUnpairing.setOnClickListener(new View.OnClickListener() {
@@ -209,8 +209,10 @@ public class BluetoothChatFragment extends Fragment {
                                 if(MySingletone.getInstance().isMACValid(MAC)) {
                                     BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(MAC);
                                     mChatService.connect(device, true);
-                                    tvMAC.setText(MAC);
-                                    tvDeviceName.setText(Device);
+                                    deviceMAC = MAC;
+                                    deviceName = Device;
+                                    connectedMac.setText(MAC);
+                                    connectedDevice.setText(Device);
                                 }
                                 else
                                     MySingletone.getInstance().ShowToastMessage("Invalid MAC address", getContext());
@@ -311,9 +313,9 @@ public class BluetoothChatFragment extends Fragment {
      * @param resId a string resource ID
      */
     private void setStatus(int resId) {
-        tvPairing.setText(resId);
-        tvMAC.setText(deviceMAC);
-        tvDeviceName.setText(deviceName);
+        connectedStatus.setText(resId);
+        connectedMac.setText(deviceMAC);
+        connectedDevice.setText(deviceName);
     }
 
     /**
@@ -322,9 +324,9 @@ public class BluetoothChatFragment extends Fragment {
      * @param subTitle status
      */
     private void setStatus(CharSequence subTitle) {
-        tvPairing.setText(subTitle);
-        tvMAC.setText(deviceMAC);
-        tvDeviceName.setText(deviceName);
+        connectedStatus.setText(subTitle);
+        connectedMac.setText(deviceMAC);
+        connectedDevice.setText(deviceName);
     }
 
     /**
