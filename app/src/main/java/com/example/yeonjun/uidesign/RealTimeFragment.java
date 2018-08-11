@@ -46,17 +46,17 @@ public class RealTimeFragment extends Fragment {
                 case StatusCode.UPDATE:
                     if(sp.getInt(StatusCode.SSN, -1) != -1) {
                         try {
-                            JSONObject data = new JSONObject(sp.getString(StatusCode.RT_AIR, null));
-                            coNumberTextView.setText(String.valueOf(data.getDouble("CO")));
-                            o3NumberTextView.setText(String.valueOf(data.getDouble("O3")));
-                            no2NumberTextView.setText(String.valueOf(data.getDouble("NO2")));
-                            so2NumberTextView.setText(String.valueOf(data.getDouble("SO2")));
+                            JSONObject data = new JSONObject(sp.getString(StatusCode.RT_AQI, null));
+                            coNumberTextView.setText(String.format("%.1f", data.getDouble("CO")));
+                            o3NumberTextView.setText(String.format("%.1f", data.getDouble("O3")));
+                            so2NumberTextView.setText(String.format("%.1f", data.getDouble("SO2")));
+                            no2NumberTextView.setText(String.format("%.1f", data.getDouble("NO2")));
                         } catch (Exception e) {
                             Log.i("JADE-APD-UPDATE-ERROR", e.toString());
                         }
                     }
                     break;
-            }
+            }Double.parseDouble(String.format("%.1f", 10.0 / 3));
         }
     };
 

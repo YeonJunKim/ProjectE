@@ -844,7 +844,7 @@ class AirDataTransferTask extends Tasks{
                 case "aqi":
                     url = new URL("http://192.241.221.155:8081/api/data/aqi/insert/"
                             + sp.getString("token", null));
-                    editor.putString(strings[0], null);
+                    editor.putString(StatusCode.RT_AQI, strings[0]);
                     editor.apply();
                     Log.i("JADE-AIR-TYPE", "aqi");
                     break;
@@ -882,7 +882,9 @@ class AirDataTransferTask extends Tasks{
                     } else
                         return StatusCode.FAILED;
                 }
+                else return StatusCode.FAILED;
             }
+            else return StatusCode.FAILED;
         }catch (Exception e){
             Log.i("JADE-ERROR", e.toString());
         }
