@@ -59,13 +59,7 @@ public class RealTimeFragment extends Fragment {
             }
         }
     };
-
-    float aqi = 32;
-    float o3 = 22;
-    float no2 = 11;
-    float so2 = 3;
-    float co = 44;
-
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -90,7 +84,7 @@ public class RealTimeFragment extends Fragment {
         o3NumberTextView = view.findViewById(R.id.o3NumberTextView);
         no2NumberTextView = view.findViewById(R.id.no2NumberTextView);
         so2NumberTextView = view.findViewById(R.id.so2NumberTextView);
-
+    }
 
     @Override
     public void onResume() {
@@ -107,6 +101,7 @@ public class RealTimeFragment extends Fragment {
 
     private class AirUpdater extends TimerTask {
         private Handler handler;
+
         protected AirUpdater(Handler handler) {
             this.handler = handler;
         }
@@ -115,4 +110,5 @@ public class RealTimeFragment extends Fragment {
         public void run() {
             handler.obtainMessage(StatusCode.UPDATE).sendToTarget();
         }
+    }
 }
