@@ -21,32 +21,37 @@
 
     <TextView
         android:id="@+id/itemSSN"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="0"
         android:gravity="center"
         android:layout_gravity="center"
         android:textSize="20dp"
         android:text="SSN" />
 
     <TextView
-        android:id="@+id/itemMAC"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="3"
-        android:gravity="center"
+        android:id="@+id/itemDeviceName"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
         android:layout_gravity="center"
-        android:textSize="20dp"
-        android:text="MAC" />
+        android:layout_weight="12"
+        android:gravity="left|center"
+        android:paddingLeft="5dp"
+        android:text="DeviceName"
+        android:textSize="18dp"
+        android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/itemDeviceName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="2"
-        android:gravity="center"
+        android:id="@+id/itemMAC"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
         android:layout_gravity="center"
-        android:textSize="20dp"
-        android:text="DeviceName" />
+        android:layout_weight="13"
+        android:gravity="left|center"
+        android:paddingLeft="5dp"
+        android:text="MAC"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        />
 
 </LinearLayout>
