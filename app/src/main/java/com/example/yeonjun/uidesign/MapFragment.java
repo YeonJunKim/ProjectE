@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import android.graphics.*;
@@ -47,6 +48,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     ArrayList<AQICircle> aqiCircles = new ArrayList<>();
     SharedPreferences sp;
 
+    RadioGroup radioGroup;
+
 
     private static final LatLng QI_LAT_LNG = new LatLng(32.882511,-117.234557);
     private static final LatLng THE_VILLAGE_LAT_LNG = new LatLng(32.888600,-117.241925);
@@ -70,6 +73,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mapView = (MapView) getView().findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
+        radioGroup = view.findViewById(R.id.radioGroup);
 
         sp = getActivity().getSharedPreferences(getString(R.string.sh_pref), Context.MODE_PRIVATE);
 
@@ -104,6 +108,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         aqiCircles.add(a4);
         aqiCircles.add(a5);
         aqiCircles.add(a6);
+
+
+        radioGroup.check(R.id.coRadioButton);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                map.clear();
+                for(int j = 0; j < aqiCircles.size(); j++) {
+                    drawCircle(aqiCircles.get(j).getPos(), GetAQIColor(GetCurrentSelectedAQI(j)));
+                }
+                UpdateInfoWindows();
+            }
+        });
     }
 
     @Override
@@ -209,7 +226,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         circle.center(point);
 
         // Radius of the circle
-        circle.radius(200);
+        circle.radius(300);
 
         // Border color of the circle
         circle.strokeColor(Color.BLACK);
@@ -218,7 +235,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         circle.fillColor(color);
 
         // Border width of the circle
-        circle.strokeWidth(2);
+        circle.strokeWidth(3);
 
         circle.clickable(true);
 
@@ -237,9 +254,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             aqiCircles.get(i).setO3(GetFakeChange(aqiCircles.get(i).getO3(), 0, 500));
             aqiCircles.get(i).setSo2(GetFakeChange(aqiCircles.get(i).getSo2(), 0, 500));
             aqiCircles.get(i).setTemp(GetFakeChange(aqiCircles.get(i).getTemp(), 26, 32));
-            aqiCircles.get(i).UpdateHighestValue();
 
-            drawCircle(aqiCircles.get(i).getPos(), GetAQIColor(aqiCircles.get(i).getHighestValue()));
+            drawCircle(aqiCircles.get(i).getPos(), GetAQIColor(GetCurrentSelectedAQI(i)));
         }
 
         UpdateInfoWindows();
@@ -274,17 +290,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         int color;
 
         if(aqi > 300)
-            color = Color.argb(100, 126, 0, 35);
+            color = Color.argb(200, 126, 0, 35);
         else if(aqi > 200)
-            color = Color.argb(100, 153, 0, 76);
+            color = Color.argb(200, 153, 0, 76);
         else if(aqi > 150)
-            color = Color.argb(100, 255, 0, 0);
+            color = Color.argb(200, 255, 0, 0);
         else if(aqi > 100)
-            color = Color.argb(100, 255, 126, 0);
+            color = Color.argb(200, 255, 126, 0);
         else if(aqi > 50)
-            color = Color.argb(100, 255, 255, 0);
+            color = Color.argb(200, 255, 255, 0);
         else
-            color = Color.argb(100, 0, 228, 0);
+            color = Color.argb(200, 0, 228, 0);
 
         return color;
     }
@@ -293,7 +309,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     void UpdateInfoWindows() {
         for(int i = 0; i < aqiCircles.size(); i++) {
             AQICircle aqiCircle = aqiCircles.get(i);
-            String text =  Float.toString(aqiCircle.getHighestValue());
+            String text =  Float.toString(GetCurrentSelectedAQI(i));
 
             MarkerOptions markerOptions = new MarkerOptions()
                     .position(aqiCircle.getPos())
@@ -304,19 +320,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             if(aqiCircle.getShowOnMap() == true) {
 
                 String ssn = Integer.toString(aqiCircle.getSsn());
-                String aqi = Float.toString(aqiCircle.getHighestValue());
                 String co = Float.toString(aqiCircle.getCo());
                 String o3 = Float.toString(aqiCircle.getO3());
                 String no2 = Float.toString(aqiCircle.getNo2());
                 String so2 = Float.toString(aqiCircle.getSo2());
                 String temp = Float.toString(aqiCircle.getTemp());
+                String lat = String.format("%.4f" , aqiCircle.getPos().latitude);
+                String lng = String.format("%.4f" , aqiCircle.getPos().longitude);
+
                 Marker m =  map.addMarker(new MarkerOptions()
                         .alpha(0.0f)
                         .infoWindowAnchor(.6f,1.0f)
                         .position(aqiCircle.getPos())
                         .title("Sensor Info")
                         .snippet("Sensor Num: " + ssn + "\n" +
-                                "Air Quality: " + aqi + "\n" +
+                                "Lat: " + lat + "\n" +
+                                "Lng: " + lng + "\n" +
                                 "CO: " + co + "\n" +
                                 "O3: " + o3 + "\n" +
                                 "NO2: " + no2 + "\n" +
@@ -356,6 +375,23 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
 
+    float GetCurrentSelectedAQI(int i) {
+        switch (radioGroup.getCheckedRadioButtonId()) {
+            case R.id.coRadioButton:
+                return aqiCircles.get(i).getCo();
+            case R.id.o3RadioButton:
+                return aqiCircles.get(i).getO3();
+            case R.id.no2RadioButton:
+                return aqiCircles.get(i).getNo2();
+            case R.id.so2RadioButton:
+                return aqiCircles.get(i).getSo2();
+            case R.id.tempRadioButton:
+                return aqiCircles.get(i).getTemp();
+            }
+            return 0;
+    }
+
+
     @Override
     public void onResume() {
         mapView.onResume();
@@ -390,19 +426,11 @@ class AQICircle {
     boolean showOnMap = false;
     CircleOptions circle;
     int ssn;
-    float highestValue;
     float co;
     float o3;
     float no2;
     float so2;
     float temp;
-
-
-    public void UpdateHighestValue() {
-        highestValue = Math.max(co, o3);
-        highestValue = Math.max(highestValue, no2);
-        highestValue = Math.max(highestValue, so2);
-    }
 
 
     public CircleOptions getCircle() {
@@ -433,10 +461,6 @@ class AQICircle {
 
     public int getSsn() {
         return ssn;
-    }
-
-    public float getHighestValue() {
-        return highestValue;
     }
 
     public float getCo() {
