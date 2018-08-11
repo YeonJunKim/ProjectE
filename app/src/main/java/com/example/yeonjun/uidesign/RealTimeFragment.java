@@ -1,20 +1,27 @@
 package com.example.yeonjun.uidesign;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.json.JSONObject;
+
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class RealTimeFragment extends Fragment {
@@ -29,7 +36,29 @@ public class RealTimeFragment extends Fragment {
     TextView o3NumberTextView;
     TextView no2NumberTextView;
     TextView so2NumberTextView;
-    Handler handler = new Handler();
+
+    private static AirUpdater airUpdater;
+    SharedPreferences sp;
+    Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case StatusCode.UPDATE:
+                    if(sp.getInt(StatusCode.SSN, -1) != -1) {
+                        try {
+                            JSONObject data = new JSONObject(sp.getString(StatusCode.RT_AIR, null));
+                            coNumberTextView.setText(String.valueOf(data.getDouble("CO")));
+                            o3NumberTextView.setText(String.valueOf(data.getDouble("O3")));
+                            no2NumberTextView.setText(String.valueOf(data.getDouble("NO2")));
+                            so2NumberTextView.setText(String.valueOf(data.getDouble("SO2")));
+                        } catch (Exception e) {
+                            Log.i("JADE-APD-UPDATE-ERROR", e.toString());
+                        }
+                    }
+                    break;
+            }
+        }
+    };
 
     float aqi = 32;
     float o3 = 22;
@@ -48,6 +77,8 @@ public class RealTimeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        sp = getActivity().getSharedPreferences(getString(R.string.sh_pref), Context.MODE_PRIVATE);
+
         aqiProgressBar = view.findViewById(R.id.aqiProgressBar);
         coProgressBar = view.findViewById(R.id.coProgressBar);
         o3ProgressBar = view.findViewById(R.id.o3ProgressBar);
@@ -60,83 +91,28 @@ public class RealTimeFragment extends Fragment {
         no2NumberTextView = view.findViewById(R.id.no2NumberTextView);
         so2NumberTextView = view.findViewById(R.id.so2NumberTextView);
 
-        new Thread(new Runnable() {
 
-            @Override
-            public void run() {
-                // TODO Auto-generated method stub
-                while (true) {
-                    handler.post(new Runnable() {
-
-                        @Override
-                        public void run() {
-
-
-                            // TODO Auto-generated method stub
-                            Faaaaaaaaaaaaaaaake(aqiProgressBar, aqiNumberTextView, GetFakeChange(aqi, 0, 500));
-                            Faaaaaaaaaaaaaaaake(coProgressBar, coNumberTextView, GetFakeChange(co, 0, 500));
-                            Faaaaaaaaaaaaaaaake(o3ProgressBar, o3NumberTextView, GetFakeChange(o3, 0, 500));
-                            Faaaaaaaaaaaaaaaake(no2ProgressBar, no2NumberTextView, GetFakeChange(no2, 0, 500));
-                            Faaaaaaaaaaaaaaaake(so2ProgressBar, so2NumberTextView, GetFakeChange(so2, 0, 500));
-                        }
-                    });
-                    try {
-                        // Sleep for 200 milliseconds.
-                        // Just to display the progress slowly
-                        Thread.sleep(1000); //thread will take approx 1.5 seconds to finish
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }).start();
+    @Override
+    public void onResume() {
+        airUpdater = new AirUpdater(handler);
+        new Timer().schedule(airUpdater, 0, 5000);
+        super.onResume();
     }
 
-    void Faaaaaaaaaaaaaaaake(ProgressBar bar, TextView text, float value) {
-
-        bar.setProgress(100);
-        text.setText(Integer.toString((int)value));
-
-        String color;
-        if(value > 300)
-            color = "#7E0023";
-        else if(value > 200)
-            color = "#99004C";
-        else if(value > 150)
-            color = "#FF0000";
-        else if(value > 100)
-            color = "#FF7E00";
-        else if(value > 50)
-            color = "#FFFF00";
-        else
-            color = "#00E400";
-
-        bar.getProgressDrawable().setColorFilter(Color.parseColor(color), android.graphics.PorterDuff.Mode.SRC_IN);
+    @Override
+    public void onPause() {
+        airUpdater.cancel();
+        super.onPause();
     }
 
-
-    float GetFakeChange(float originalValue, int min, int max) {
-        int sign = 1;
-        int changeAmount = 0;
-
-        Random r = new Random();
-        int randNum;
-        randNum = r.nextInt(100 - 0) + 0;
-        if(randNum < 50) {
-            sign = -1;
+    private class AirUpdater extends TimerTask {
+        private Handler handler;
+        protected AirUpdater(Handler handler) {
+            this.handler = handler;
         }
 
-        changeAmount = r.nextInt(3 - 0) + 0;
-
-        float changedValue = originalValue;
-        changedValue += changeAmount * sign;
-        if(changedValue < min)
-            changedValue = min;
-        if(changedValue > max) {
-            changedValue = max;
+        @Override
+        public void run() {
+            handler.obtainMessage(StatusCode.UPDATE).sendToTarget();
         }
-
-        return  changedValue;
-    }
-
 }

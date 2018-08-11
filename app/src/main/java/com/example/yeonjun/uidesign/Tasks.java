@@ -823,109 +823,65 @@ class HistoricalAPDTask extends Tasks{
     }
 }
 
-class APDTransferTask extends Tasks{
-    public APDTransferTask(Handler handler, SharedPreferences sp) {
+class AirDataTransferTask extends Tasks{
+    private SharedPreferences.Editor editor;
+    public AirDataTransferTask(Handler handler, SharedPreferences sp) {
         super(handler, sp);
+        editor = sp.edit();
     }
 
     @Override
     protected Integer doInBackground(String... strings) {
         try{
-            URL url = new URL("http://192.241.221.155:8081/api/data/rawair/insert/"
-                    + sp.getString("token", null));
-            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-type", "application/json");
-
-            JSONObject data = new JSONObject();
-            data.put("CO", Float.valueOf(strings[0]));
-            data.put("NO2", Float.valueOf(strings[1]));
-            data.put("SO2", Float.valueOf(strings[2]));
-            data.put("O3", Float.valueOf(strings[3]));
-            data.put("temperature", Float.valueOf(strings[4]));
-            data.put("timestamp", MySingletone.getInstance().getTimestamp());
-            data.put("lat", sp.getFloat(StatusCode.LATITUDE, 0));
-            data.put("lng", sp.getFloat(StatusCode.LONGITUDE, 0));
-            data.put("SSN",sp.getInt(StatusCode.SSN, -1));
-
-            OutputStream os = conn.getOutputStream();
-            os.write(data.toString().getBytes("UTF-8"));
-            os.flush();
-            os.close();
-
-            if(conn.getResponseCode() == HttpURLConnection.HTTP_OK){
-                InputStream is = conn.getInputStream();
-                BufferedReader buffer = new BufferedReader(new InputStreamReader(is));
-                String input = null;
-                StringBuilder sb = new StringBuilder();
-                while((input = buffer.readLine()) != null){
-                    Log.i("JADE-INPUT", input);
-                    sb.append(input);
-                }
-
-                JSONObject response = new JSONObject(sb.toString());
-                if(response.getBoolean("success"))
-                    return StatusCode.SUCCESS;
-                else
-                    return StatusCode.FAILED;
+            URL url = null;
+            JSONObject data = new JSONObject(strings[0]);
+            switch (data.getString("type")){
+                case "raw":
+                    url = new URL("http://192.241.221.155:8081/api/data/rawair/insert/"
+                            + sp.getString("token", null));
+                    Log.i("JADE-AIR-TYPE", "raw");
+                    break;
+                case "aqi":
+                    url = new URL("http://192.241.221.155:8081/api/data/aqi/insert/"
+                            + sp.getString("token", null));
+                    editor.putString(strings[0], null);
+                    editor.apply();
+                    Log.i("JADE-AIR-TYPE", "aqi");
+                    break;
             }
-        }catch (Exception e){
-            Log.i("JADE-ERROR", e.toString());
-        }
-        return null;
-    }
+            if(url != null) {
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-type", "application/json");
 
-    @Override
-    protected void onPostExecute(Integer result) {
-        super.onPostExecute(result);
-    }
-}
+                data.remove("type");
+                data.put("lat", sp.getFloat(StatusCode.LATITUDE, 0));
+                data.put("lng", sp.getFloat(StatusCode.LONGITUDE, 0));
+                data.put("SSN", sp.getInt(StatusCode.SSN, -1));
+                Log.i("JADE-AIR-TRF", data.toString());
 
-class AQITransferTask extends Tasks{
-    public AQITransferTask(Handler handler, SharedPreferences sp) {
-        super(handler, sp);
-    }
+                OutputStream os = conn.getOutputStream();
+                os.write(data.toString().getBytes("UTF-8"));
+                os.flush();
+                os.close();
 
-    @Override
-    protected Integer doInBackground(String... strings) {
-        try{
-            URL url = new URL("http://192.241.221.155:8081/api/data/aqi/insert/"
-                    + sp.getString("token", null));
-            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-type", "application/json");
+                if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    InputStream is = conn.getInputStream();
+                    BufferedReader buffer = new BufferedReader(new InputStreamReader(is));
+                    String input = null;
+                    StringBuilder sb = new StringBuilder();
+                    while ((input = buffer.readLine()) != null) {
+                        Log.i("JADE-INPUT", input);
+                        sb.append(input);
+                    }
 
-            JSONObject data = new JSONObject();
-            data.put("CO", Float.valueOf(strings[0]));
-            data.put("NO2", Float.valueOf(strings[1]));
-            data.put("SO2", Float.valueOf(strings[2]));
-            data.put("O3", Float.valueOf(strings[3]));
-            data.put("temperature", Float.valueOf(strings[4]));
-            data.put("timestamp", MySingletone.getInstance().getTimestamp());
-            data.put("lat", sp.getFloat(StatusCode.LATITUDE, 0));
-            data.put("lng", sp.getFloat(StatusCode.LONGITUDE, 0));
-            data.put("SSN",sp.getInt(StatusCode.SSN, -1));
-
-            OutputStream os = conn.getOutputStream();
-            os.write(data.toString().getBytes("UTF-8"));
-            os.flush();
-            os.close();
-
-            if(conn.getResponseCode() == HttpURLConnection.HTTP_OK){
-                InputStream is = conn.getInputStream();
-                BufferedReader buffer = new BufferedReader(new InputStreamReader(is));
-                String input = null;
-                StringBuilder sb = new StringBuilder();
-                while((input = buffer.readLine()) != null){
-                    Log.i("JADE-INPUT", input);
-                    sb.append(input);
+                    JSONObject response = new JSONObject(sb.toString());
+                    if (response.getBoolean("success")) {
+                        Log.i("JADE-AIR-TRF", "AIR data transfer success");
+                        return StatusCode.TRF_RT_AIR;
+                    } else
+                        return StatusCode.FAILED;
                 }
-
-                JSONObject response = new JSONObject(sb.toString());
-                if(response.getBoolean("success"))
-                    return StatusCode.SUCCESS;
-                else
-                    return StatusCode.FAILED;
             }
         }catch (Exception e){
             Log.i("JADE-ERROR", e.toString());

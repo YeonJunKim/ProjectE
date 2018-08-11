@@ -21,6 +21,8 @@ public interface StatusCode {
     public static final int GET_HISTORICAL_HEART = 42;
     public static final int GET_HISTORICAL_APD = 43;
 
+    public static final int TRF_RT_AIR = 51;
+
     public static final String TYPE_ID = "id";
     public static final String TYPE_EMAIL = "email";
 
@@ -30,6 +32,8 @@ public interface StatusCode {
     public static final String HISTROICAL_AQI = "historicalAQI";
     public static final String HISTROICAL_HEART = "historicalHeart";
     public static final String HISTROICAL_APD = "historicalAPD";
+    public static final String RT_AIR = "realtimeAir";
+    public static final String RT_AQI = "realtimeAQI";
 
     public static final String LONGITUDE = "lng";
     public static final String LATITUDE = "lat";
