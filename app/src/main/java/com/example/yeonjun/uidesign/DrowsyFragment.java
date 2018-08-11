@@ -15,13 +15,10 @@ import android.widget.Toast;
 
 public class DrowsyFragment extends Fragment {
 
-    Button testButton;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        Log.d("dddd", "onCreateView: ??????????????????????");
         return inflater.inflate(R.layout.fragment_drowsy, container, false);
     }
 
@@ -29,15 +26,5 @@ public class DrowsyFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
-        Log.d("dddd", "onViewCreated: ??????????????????????");
-//        testButton = (Button) getView().findViewById(R.id.button);
-//
-//        testButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                MySingletone.getInstance().ShowToastMessage("drowsy fragment", getActivity());
-//            }
-//        });
     }
 }

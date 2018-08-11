@@ -29,11 +29,13 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -52,12 +54,13 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
     Spinner objectSpinner;
     Spinner dateSpinner;
 
-    String selectedObject = "Drowsiness";
+    String selectedObject = "Heart-rate";
     String selectedDateTerm = "DAY";
     ArrayList<String> xValues = new ArrayList<>();  // 귀찮아서 맴버변수로 뺏음
 
     TextView yAxisText;
     TextView xAxisText;
+
 
     Handler mHandler = new Handler(){
         @Override
@@ -129,7 +132,7 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
 
         objectSpinner = view.findViewById(R.id.objectSpinner);
         dateSpinner = view.findViewById(R.id.dateSpinner);
-        String[] objectItems = new String[]{"Drowsiness", "Heart-rate", "RR-interval",  "CO", "CO2", "NO2", "SO2", "O3", "Temperature"};
+        String[] objectItems = new String[]{"Heart-rate", "RR-interval",  "CO", "NO2", "SO2", "O3", "Temperature"};
         String[] dateItems = new String[]{"1 DAY", "1 WEEK", "1 MONTH"};
 
         try {
@@ -157,31 +160,25 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
                 switch (position) {
-                    case 0: // Drowsiness
-                        selectedObject = "Drowsiness";
-                        break;
-                    case 1: // Heart-rate
+                    case 0: // Heart-rate
                         selectedObject = "Heart-rate";
                         break;
-                    case 2: // RR-interval
+                    case 1: // RR-interval
                         selectedObject = "RR-interval";
                         break;
-                    case 3: // CO
+                    case 2: // CO
                         selectedObject = "CO";
                         break;
-                    case 4: // CO2
-                        selectedObject = "CO2";
-                        break;
-                    case 5: // NO2
+                    case 3: // NO2
                         selectedObject = "NO2";
                         break;
-                    case 6: // SO2
+                    case 4: // SO2
                         selectedObject = "SO2";
                         break;
-                    case 7: // O3
+                    case 5: // O3
                         selectedObject = "O3";
                         break;
-                    case 8: // Temperature
+                    case 6: // Temperature
                         selectedObject = "Temperature";
                         break;
                 }
@@ -375,6 +372,10 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
         dataSet.setValueTextSize(12);
 
         LineData data = new LineData(dataSet);
+        if(selectedObject.contentEquals("Heart-rate"))
+            data.setValueFormatter(new IntFormatter());
+        else
+            data.setValueFormatter(new FloatFormatter());
         mChart.setData(data);
 
 
@@ -382,12 +383,12 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
             leftAxis.removeAllLimitLines();
             leftAxis.setTextSize(15);
 
-            if(selectedObject.contentEquals("Drowsiness")){
-                leftAxis.setAxisMaximum(100f);
-                leftAxis.setAxisMinimum(0);
-                yAxisText.setText("%");
-            }
-            else if(selectedObject.contentEquals("Heart-rate")) {
+//            if(selectedObject.contentEquals("Drowsiness")){
+//                leftAxis.setAxisMaximum(100f);
+//                leftAxis.setAxisMinimum(0);
+//                yAxisText.setText("%");
+//            }
+            if(selectedObject.contentEquals("Heart-rate")) {
                 leftAxis.setAxisMaximum(200f);
                 leftAxis.setAxisMinimum(0);
                 yAxisText.setText("Rate");
@@ -400,27 +401,22 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
             else if(selectedObject.contentEquals("CO")) {
                 leftAxis.setAxisMaximum(500f);
                 leftAxis.setAxisMinimum(0);
-                yAxisText.setText("AQI");
-            }
-            else if(selectedObject.contentEquals("CO2")) {
-                leftAxis.setAxisMaximum(500f);
-                leftAxis.setAxisMinimum(0);
-                yAxisText.setText("AQI");
+                yAxisText.setText("CO");
             }
             else if(selectedObject.contentEquals("NO2")) {
                 leftAxis.setAxisMaximum(500f);
                 leftAxis.setAxisMinimum(0);
-                yAxisText.setText("AQI");
+                yAxisText.setText("NO2");
             }
             else if(selectedObject.contentEquals("SO2")) {
                 leftAxis.setAxisMaximum(500f);
                 leftAxis.setAxisMinimum(0);
-                yAxisText.setText("AQI");
+                yAxisText.setText("SO2");
             }
             else if(selectedObject.contentEquals("O3")) {
                 leftAxis.setAxisMaximum(500f);
                 leftAxis.setAxisMinimum(0);
-                yAxisText.setText("AQI");
+                yAxisText.setText("O3");
             }
             else if(selectedObject.contentEquals("Temperature")) {
                 leftAxis.setAxisMaximum(40f);
@@ -524,6 +520,8 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
         }
         else {
             for(int i = 0; i < aqiArrayList.size(); i++) {
+                if(aqiArrayList.get(i).getTime() == null)
+                    continue;
 
                 if(aqiArrayList.get(i).getTime().compareTo(dividedDates.get(devideNum - 1 - sliceCount)) < 0){
                     valueSum += GetCurrentObjectValue(i);
@@ -629,6 +627,8 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
         }
         else {
             for(int i = 0; i < aqiArrayList.size(); i++) {
+                if(aqiArrayList.get(i).getTime() == null)
+                    continue;
 
                 if(aqiArrayList.get(i).getTime().compareTo(dividedDates.get(devideNum - 1 - sliceCount)) < 0){
                     valueSum += GetCurrentObjectValue(i);
@@ -746,6 +746,8 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
         }
         else {
             for(int i = 0; i < aqiArrayList.size(); i++) {
+                if(aqiArrayList.get(i).getTime() == null)
+                    continue;
 
                 if(aqiArrayList.get(i).getTime().compareTo(dividedDates.get(devideNum - 1 - sliceCount)) < 0){
                     valueSum += GetCurrentObjectValue(i);
@@ -774,10 +776,10 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
 
 
     float GetCurrentObjectValue(int index) {
-        if(selectedObject.contentEquals("Drowsiness")){
-            //
-        }
-        else if(selectedObject.contentEquals("Heart-rate")) {
+//        if(selectedObject.contentEquals("Drowsiness")){
+//            //
+//        }
+        if(selectedObject.contentEquals("Heart-rate")) {
             return heartArrayList.get(index).getHeartRate().floatValue();
         }
         else if(selectedObject.contentEquals("RR-interval")) {
@@ -785,9 +787,6 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
         }
         else if(selectedObject.contentEquals("CO")) {
             return aqiArrayList.get(index).getCO().floatValue();
-        }
-        else if(selectedObject.contentEquals("CO2")) {
-            //
         }
         else if(selectedObject.contentEquals("NO2")) {
             return aqiArrayList.get(index).getNO2().floatValue();
@@ -811,19 +810,16 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
         ArrayList<String> dateList;
         dateList = CalculateDate(selectedDateTerm);
 
-        if(selectedObject.contentEquals("Drowsiness")){
-            MySingletone.getInstance().HideProgressBar();
-        }
-        else if(selectedObject.contentEquals("Heart-rate")) {
+//        if(selectedObject.contentEquals("Drowsiness")){
+//            MySingletone.getInstance().HideProgressBar();
+//        }
+        if(selectedObject.contentEquals("Heart-rate")) {
             new HistoricalHeartDataTask(mHandler, sp).execute(dateList.get(0), dateList.get(1), dateList.get(2), dateList.get(3));
         }
         else if(selectedObject.contentEquals("RR-interval")) {
             new HistoricalHeartDataTask(mHandler, sp).execute(dateList.get(0), dateList.get(1), dateList.get(2), dateList.get(3));
         }
         else if(selectedObject.contentEquals("CO")) {
-            new HistoricalAQITask(mHandler, sp).execute(dateList.get(0), dateList.get(1), dateList.get(2), dateList.get(3));
-        }
-        else if(selectedObject.contentEquals("CO2")) {
             new HistoricalAQITask(mHandler, sp).execute(dateList.get(0), dateList.get(1), dateList.get(2), dateList.get(3));
         }
         else if(selectedObject.contentEquals("NO2")) {
@@ -853,17 +849,16 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
 
     @Override
     public void onChartLongPressed(MotionEvent me) {
-        Log.i(TAG, "onChartLongPressed: ");
     }
 
     @Override
     public void onChartDoubleTapped(MotionEvent me) {
-        Log.i(TAG, "onChartDoubleTapped: ");
+
     }
 
     @Override
     public void onChartSingleTapped(MotionEvent me) {
-        Log.i(TAG, "onChartSingleTapped: ");
+
     }
 
     @Override
@@ -891,4 +886,22 @@ public class HistoryFragment extends Fragment implements OnChartGestureListener,
 
     }
 
+}
+
+
+
+class IntFormatter implements IValueFormatter {
+
+    @Override
+    public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+        return "" + ((int) value);
+    }
+}
+class FloatFormatter implements IValueFormatter{
+
+    @Override
+    public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+        String num = String.format("%.1f" , value);
+        return num;
+    }
 }

@@ -60,6 +60,12 @@ public class RealTimeFragment extends Fragment {
         }
     };
 
+    float aqi = 32;
+    float o3 = 22;
+    float no2 = 11;
+    float so2 = 3;
+    float co = 44;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -85,61 +91,6 @@ public class RealTimeFragment extends Fragment {
         no2NumberTextView = view.findViewById(R.id.no2NumberTextView);
         so2NumberTextView = view.findViewById(R.id.so2NumberTextView);
 
-//        new Thread(new Runnable() {
-//
-//            @Override
-//            public void run() {
-//                // TODO Auto-generated method stub
-//                while (true) {
-//                    handler.post(new Runnable() {
-//
-//                        @Override
-//                        public void run() {
-//
-//
-//                            // TODO Auto-generated method stub
-//                            Faaaaaaaaaaaaaaaake(aqiProgressBar, aqiNumberTextView);
-//                            Faaaaaaaaaaaaaaaake(coProgressBar, coNumberTextView);
-//                            Faaaaaaaaaaaaaaaake(o3ProgressBar, o3NumberTextView);
-//                            Faaaaaaaaaaaaaaaake(no2ProgressBar, no2NumberTextView);
-//                            Faaaaaaaaaaaaaaaake(so2ProgressBar, so2NumberTextView);
-//                        }
-//                    });
-//                    try {
-//                        // Sleep for 200 milliseconds.
-//                        // Just to display the progress slowly
-//                        Thread.sleep(1000); //thread will take approx 1.5 seconds to finish
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//        }).start();
-    }
-
-    void Faaaaaaaaaaaaaaaake(ProgressBar bar, TextView text, float value) {
-        Random r = new Random();
-        int randNum = r.nextInt(100 - 0) + 0;
-
-        bar.setProgress(randNum);
-        text.setText(Integer.toString(randNum));
-
-        String color;
-        if(randNum > 85)
-            color = "#7E0023";
-        else if(randNum > 70)
-            color = "#99004C";
-        else if(randNum > 55)
-            color = "#FF0000";
-        else if(randNum > 40)
-            color = "#FF7E00";
-        else if(randNum > 25)
-            color = "#FFFF00";
-        else
-            color = "#00E400";
-
-        bar.getProgressDrawable().setColorFilter(Color.parseColor(color), android.graphics.PorterDuff.Mode.SRC_IN);
-    }
 
     @Override
     public void onResume() {
@@ -164,6 +115,4 @@ public class RealTimeFragment extends Fragment {
         public void run() {
             handler.obtainMessage(StatusCode.UPDATE).sendToTarget();
         }
-    }
-
 }
