@@ -839,6 +839,8 @@ class AirDataTransferTask extends Tasks{
                 case "raw":
                     url = new URL("http://192.241.221.155:8081/api/data/rawair/insert/"
                             + sp.getString("token", null));
+                    editor.putFloat(StatusCode.TEMPERATURE, (float)data.getDouble("temperature"));
+                    editor.apply();
                     Log.i("JADE-AIR-TYPE", "raw");
                     break;
                 case "aqi":
@@ -894,5 +896,60 @@ class AirDataTransferTask extends Tasks{
     @Override
     protected void onPostExecute(Integer result) {
         super.onPostExecute(result);
+    }
+}
+
+class CurrentAQITask extends Tasks{
+    private String ssn, data;
+    public CurrentAQITask(Handler handler, SharedPreferences sp) {
+        super(handler, sp);
+    }
+
+    @Override
+    protected Integer doInBackground(String... strings) {
+        try{
+            ssn = strings[0];
+            URL url = new URL("http://192.241.221.155:8081/api/data/aqi/recent/"
+                    + ssn +"/"+ sp.getString("token", null));
+            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+            conn.setRequestMethod("GET");
+
+            if(conn.getResponseCode() == HttpURLConnection.HTTP_OK){
+                InputStream is = conn.getInputStream();
+                BufferedReader buffer = new BufferedReader(new InputStreamReader(is));
+                String input = null;
+                StringBuilder sb = new StringBuilder();
+                while((input = buffer.readLine()) != null){
+                    Log.i("JADE-DUMMY", input);
+                    sb.append(input);
+                }
+
+                JSONObject response = new JSONObject(sb.toString());
+                if(response.getBoolean("success")) {
+                    data = sb.toString();
+                    Log.i("JADE-DUMMY-DATA", data);
+                    return StatusCode.GET_RECENT_AQI;
+                }
+                else
+                    return StatusCode.FAILED;
+            }
+            else{
+                return StatusCode.FAILED;
+            }
+        } catch (Exception e){
+            Log.i("JADE-ERROR", e.toString());
+        }
+        return null;
+    }
+
+    @Override
+    protected void onPostExecute(Integer result) {
+        if(result != null) {
+            Message msg = handler.obtainMessage(result, Integer.valueOf(ssn),0, data);
+            handler.sendMessage(msg);
+        }
+        else{
+            Log.i("JADE-UNKNOWN", "Unknown error");
+        }
     }
 }

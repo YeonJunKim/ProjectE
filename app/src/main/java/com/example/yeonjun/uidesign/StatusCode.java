@@ -20,6 +20,7 @@ public interface StatusCode {
     public static final int GET_HISTORICAL_AQI = 41;
     public static final int GET_HISTORICAL_HEART = 42;
     public static final int GET_HISTORICAL_APD = 43;
+    public static final int GET_RECENT_AQI = 44;
 
     public static final int TRF_RT_AIR = 51;
 
@@ -34,10 +35,12 @@ public interface StatusCode {
     public static final String HISTROICAL_APD = "historicalAPD";
     public static final String RT_AIR = "realtimeAir";
     public static final String RT_AQI = "realtimeAQI";
+    public static final String RECENT_AQI = "recentAQI";
 
     public static final String LONGITUDE = "lng";
     public static final String LATITUDE = "lat";
     public static final String SSN = "ssn";
+    public static final String TEMPERATURE = "temperature";
 
     public static final String HEART_RATE = "heartRate";
     public static final String RR_INTERVAL = "RRInterval";

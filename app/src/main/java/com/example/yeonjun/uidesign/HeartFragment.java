@@ -23,7 +23,7 @@ public class HeartFragment extends Fragment {
     TextView monitorHeart, monitorRR;
     ImageView ivHeartbeat, ivHeartbeat2;
     SharedPreferences sp;
-    private static HeartUpdater heartUpdater;
+    private static Updater heartUpdater;
 
     private Handler mHandler = new Handler(){
         @Override
@@ -59,7 +59,7 @@ public class HeartFragment extends Fragment {
 
     @Override
     public void onResume() {
-        heartUpdater = new HeartUpdater(mHandler);
+        heartUpdater = new Updater(mHandler);
         new Timer().schedule(heartUpdater, 0, 1000);
         super.onResume();
     }
@@ -68,17 +68,5 @@ public class HeartFragment extends Fragment {
     public void onPause() {
         heartUpdater.cancel();
         super.onPause();
-    }
-
-    private class HeartUpdater extends TimerTask{
-        private Handler handler;
-        protected HeartUpdater(Handler handler) {
-            this.handler = handler;
-        }
-
-        @Override
-        public void run() {
-            handler.obtainMessage(StatusCode.UPDATE).sendToTarget();
-        }
     }
 }
