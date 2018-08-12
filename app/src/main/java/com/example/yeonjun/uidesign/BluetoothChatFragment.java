@@ -211,8 +211,6 @@ public class BluetoothChatFragment extends Fragment {
                                     mChatService.connect(device, true);
                                     deviceMAC = MAC;
                                     deviceName = Device;
-                                    connectedMac.setText(MAC);
-                                    connectedDevice.setText(Device);
                                 }
                                 else
                                     MySingletone.getInstance().ShowToastMessage("Invalid MAC address", getContext());
@@ -256,8 +254,8 @@ public class BluetoothChatFragment extends Fragment {
     }
 
     public static void resetDeviceInfo(){
-//        deviceMAC = "";
-//        deviceName = "";
+        deviceMAC = "";
+        deviceName = "";
     }
     /**
      * Set up the UI and background operations for chat.
@@ -370,7 +368,6 @@ public class BluetoothChatFragment extends Fragment {
                     // construct a string from the valid bytes in the buffer
                     String readMessage = new String(readBuf, 0, msg.arg1);
                     Log.i("JADE-SENSOR-INPUT", readMessage);
-                    editor.putString(StatusCode.RT_AIR, readMessage);
                     new AirDataTransferTask(mHandler, sp).execute(readMessage);
 //                    MySingletone.getInstance().ShowToastMessage(readMessage, getContext());
 //                    mConversationArrayAdapter.add(mConnectedDeviceName + ":  " + readMessage);
@@ -393,6 +390,7 @@ public class BluetoothChatFragment extends Fragment {
                 case StatusCode.SUCCESS:
                     break;
                 case StatusCode.FAILED:
+                    Log.i("JADE-AIR-TRANS-ERROR", "air trans error occur.");
                     break;
                 case StatusCode.REGIST_SENSOR:
                 case StatusCode.DEREGIST_SENSOR:
