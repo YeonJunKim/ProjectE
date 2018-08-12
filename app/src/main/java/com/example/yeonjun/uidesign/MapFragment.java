@@ -84,11 +84,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     try {
                         JSONObject response = new JSONObject(msg.obj.toString());
                         int ssn = msg.arg1;
+                        Log.i("JADE-MAP-UPDATE-ERROR-3", "SSN = " + ssn);
                         if(!(response.getString("message").equals("No data"))) {
                             JSONObject data = response.getJSONObject("data");
+                            boolean match = false;
                             AQICircle circle = null;
                             for (int i = 0; i < aqiCircles.size(); i++) {
-                                Log.i("JADE-MAP-UPDATE-ERROR-3", ""+ i);
+                                Log.i("JADE-MAP-UPDATE-ERROR-3", "i = "+ i + ", array_size = " + aqiCircles.size());
                                 circle = aqiCircles.get(i);
                                 if (circle.getSsn() == ssn) {
                                     circle.SetValues(ssn,
@@ -99,11 +101,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                             (float) data.getDouble("temperature"));
                                     circle.setPos(new LatLng(data.getDouble("lat"),
                                             data.getDouble("lng")));
+                                    match = true;
+                                    Log.d("ddddddd", Double.toString(circle.getPos().latitude));
+                                    Log.d("ddddddd", Double.toString(circle.getPos().longitude));
                                     break;
                                 }
                             }
-                            if(circle == null){
-                                aqiCircles.add(new AQICircle(ssn, data));
+                            if(!match){
+                                Log.i("JADE-MAP-UPDATE-ERROR-3", "ADDED");
+                                    aqiCircles.add(new AQICircle(ssn, data));
                             }
                             map.clear();
                             UpdateInfoWindows();
@@ -174,6 +180,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 map.clear();
                 for(int j = 0; j < aqiCircles.size(); j++) {
+                    if(aqiCircles.get(j).getPos() == null)
+                        continue;
                     drawCircle(aqiCircles.get(j).getPos(), GetAQIColor(GetCurrentSelectedAQI(j)));
                 }
                 UpdateInfoWindows();
@@ -223,6 +231,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
                 for(int i = 0; i < aqiCircles.size(); i++) {
                     aqiCircles.get(i).setShowOnMap(false);
+                    if(aqiCircles.get(i).getPos() == null)
+                        continue;
                     if (aqiCircles.get(i).getPos().toString().contentEquals(circle.getCenter().toString())) {
                         aqiCircles.get(i).setShowOnMap(true);
                     }
@@ -236,7 +246,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             public boolean onMarkerClick(Marker marker) {
                 for(int i = 0; i < aqiCircles.size(); i++) {
                     aqiCircles.get(i).setShowOnMap(false);
-                    if (aqiCircles.get(i).getPos().toString().contentEquals(marker.getPosition().toString())) {
+                    if(aqiCircles.get(i).getPos() == null)
+                        continue;
+                    if (aqiCircles.get(i).getPos().toString().equals(marker.getPosition().toString())) {
                         aqiCircles.get(i).setShowOnMap(true);
                     }
                 }
@@ -370,6 +382,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             AQICircle aqiCircle = aqiCircles.get(i);
             String text =  Float.toString(GetCurrentSelectedAQI(i));
 
+            if(aqiCircles.get(i).getPos() == null)
+                continue;
             MarkerOptions markerOptions = new MarkerOptions()
                     .position(aqiCircle.getPos())
                     .draggable(false)
@@ -402,9 +416,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                 "Temp: " + temp + "℃" + "\n"));
 
                 m.showInfoWindow();
-
-                drawCircle(aqiCircles.get(i).getPos(), GetAQIColor(GetCurrentSelectedAQI(i)));
             }
+            drawCircle(aqiCircles.get(i).getPos(), GetAQIColor(GetCurrentSelectedAQI(i)));
         }
     }
 
