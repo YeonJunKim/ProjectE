@@ -36,7 +36,7 @@ public class RealTimeFragment extends Fragment {
     TextView no2NumberTextView;
     TextView so2NumberTextView;
 
-    private static AirUpdater airUpdater;
+    private static Updater airUpdater;
     SharedPreferences sp;
     Handler handler = new Handler(){
         @Override
@@ -91,7 +91,7 @@ public class RealTimeFragment extends Fragment {
 
     @Override
     public void onResume() {
-        airUpdater = new AirUpdater(handler);
+        airUpdater = new Updater(handler);
         new Timer().schedule(airUpdater, 0, 5000);
         super.onResume();
     }
@@ -101,20 +101,6 @@ public class RealTimeFragment extends Fragment {
         airUpdater.cancel();
         super.onPause();
     }
-
-    private class AirUpdater extends TimerTask {
-        private Handler handler;
-
-        protected AirUpdater(Handler handler) {
-            this.handler = handler;
-        }
-
-        @Override
-        public void run() {
-            handler.obtainMessage(StatusCode.UPDATE).sendToTarget();
-        }
-    }
-
 
     int GetAQIColor(Double aqi) {
         Log.d("ddddddddddd", Double.toString(aqi));
