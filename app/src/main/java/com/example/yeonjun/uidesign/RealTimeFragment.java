@@ -26,12 +26,11 @@ import java.util.TimerTask;
 
 public class RealTimeFragment extends Fragment {
 
-    ProgressBar aqiProgressBar;
     ProgressBar coProgressBar;
     ProgressBar o3ProgressBar;
     ProgressBar no2ProgressBar;
     ProgressBar so2ProgressBar;
-    TextView aqiNumberTextView;
+    TextView tempNumberTextView;
     TextView coNumberTextView;
     TextView o3NumberTextView;
     TextView no2NumberTextView;
@@ -47,16 +46,21 @@ public class RealTimeFragment extends Fragment {
                     if(sp.getInt(StatusCode.SSN, -1) != -1) {
                         try {
                             JSONObject data = new JSONObject(sp.getString(StatusCode.RT_AQI, null));
-                            coNumberTextView.setText(String.format("%.1f", data.getDouble("CO")));
-                            o3NumberTextView.setText(String.format("%.1f", data.getDouble("O3")));
-                            so2NumberTextView.setText(String.format("%.1f", data.getDouble("SO2")));
-                            no2NumberTextView.setText(String.format("%.1f", data.getDouble("NO2")));
+                            coNumberTextView.setText(String.format("%.0f", data.getDouble("CO")));
+                            o3NumberTextView.setText(String.format("%.0f", data.getDouble("O3")));
+                            so2NumberTextView.setText(String.format("%.0f", data.getDouble("SO2")));
+                            no2NumberTextView.setText(String.format("%.0f", data.getDouble("NO2")));
+                            //tempNumberTextView.setText(String.format("%.0f", data.getDouble("TEMP")));
+                            coProgressBar.getProgressDrawable().setColorFilter(GetAQIColor(data.getDouble("CO")), android.graphics.PorterDuff.Mode.SRC_IN);
+                            so2ProgressBar.getProgressDrawable().setColorFilter(GetAQIColor(data.getDouble("SO2")), android.graphics.PorterDuff.Mode.SRC_IN);
+                            o3ProgressBar.getProgressDrawable().setColorFilter(GetAQIColor(data.getDouble("O3")), android.graphics.PorterDuff.Mode.SRC_IN);
+                            no2ProgressBar.getProgressDrawable().setColorFilter(GetAQIColor(data.getDouble("NO2")), android.graphics.PorterDuff.Mode.SRC_IN);
                         } catch (Exception e) {
                             Log.i("JADE-APD-UPDATE-ERROR", e.toString());
                         }
                     }
                     break;
-            }Double.parseDouble(String.format("%.1f", 10.0 / 3));
+            }
         }
     };
 
@@ -73,13 +77,12 @@ public class RealTimeFragment extends Fragment {
 
         sp = getActivity().getSharedPreferences(getString(R.string.sh_pref), Context.MODE_PRIVATE);
 
-        aqiProgressBar = view.findViewById(R.id.aqiProgressBar);
         coProgressBar = view.findViewById(R.id.coProgressBar);
         o3ProgressBar = view.findViewById(R.id.o3ProgressBar);
         no2ProgressBar = view.findViewById(R.id.no2ProgressBar);
         so2ProgressBar = view.findViewById(R.id.so2ProgressBar);
 
-        aqiNumberTextView = view.findViewById(R.id.aqiNumberTextView);
+        tempNumberTextView = view.findViewById(R.id.tempNumberTextView);
         coNumberTextView = view.findViewById(R.id.coNumberTextView);
         o3NumberTextView = view.findViewById(R.id.o3NumberTextView);
         no2NumberTextView = view.findViewById(R.id.no2NumberTextView);
@@ -110,5 +113,26 @@ public class RealTimeFragment extends Fragment {
         public void run() {
             handler.obtainMessage(StatusCode.UPDATE).sendToTarget();
         }
+    }
+
+
+    int GetAQIColor(Double aqi) {
+        Log.d("ddddddddddd", Double.toString(aqi));
+        int color;
+
+        if(aqi > 300)
+            color = Color.argb(200, 126, 0, 35);
+        else if(aqi > 200)
+            color = Color.argb(200, 153, 0, 76);
+        else if(aqi > 150)
+            color = Color.argb(200, 255, 0, 0);
+        else if(aqi > 100)
+            color = Color.argb(200, 255, 126, 0);
+        else if(aqi > 50)
+            color = Color.argb(200, 255, 255, 0);
+        else
+            color = Color.argb(200, 0, 228, 0);
+
+        return color;
     }
 }

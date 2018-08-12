@@ -10,92 +10,62 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ProgressBar
-            android:id="@+id/aqiProgressBar"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="223dp"
-            android:layout_height="207dp"
+        <TextView
+            android:id="@+id/tempNumberTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginEnd="140dp"
+            android:layout_marginRight="140dp"
             android:layout_marginTop="8dp"
-            android:indeterminate="false"
-            android:max="100"
-            android:progress="0"
-            android:progressDrawable="@drawable/custom_progressbar_drawable"
-            android:secondaryProgress="0"
+            android:gravity="center"
+            android:text="23℃"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textSize="40dp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.459" />
+            app:layout_constraintVertical_bias="0.8" />
 
         <TextView
-            android:id="@+id/aqiNumberTextView"
+            android:id="@+id/tempTitleTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/aqiProgressBar"
-            android:layout_centerInParent="true"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:text="100"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textSize="50dp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/aqiProgressBar"
-            app:layout_constraintEnd_toEndOf="@+id/aqiProgressBar"
-            app:layout_constraintHorizontal_bias="0.496"
-            app:layout_constraintStart_toStartOf="@+id/aqiProgressBar"
-            app:layout_constraintTop_toTopOf="@+id/aqiProgressBar"
-            app:layout_constraintVertical_bias="0.503" />
-
-        <TextView
-            android:id="@+id/aqiTitleTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
-            android:text="Air Quality"
+            android:layout_marginEnd="153dp"
+            android:layout_marginLeft="152dp"
+            android:layout_marginRight="153dp"
+            android:layout_marginStart="152dp"
+            android:layout_marginTop="28dp"
+            android:text="Tempreture"
             android:textSize="20dp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@+id/aqiProgressBar"
-            app:layout_constraintHorizontal_bias="0.495"
-            app:layout_constraintStart_toStartOf="@+id/aqiProgressBar"
-            app:layout_constraintTop_toBottomOf="@+id/aqiProgressBar" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tempNumberTextView" />
 
 
         <ProgressBar
             android:id="@+id/coProgressBar"
             style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="167dp"
-            android:layout_height="155dp"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
             android:layout_centerInParent="true"
-            android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="44dp"
             android:indeterminate="false"
             android:max="100"
             android:progress="0"
             android:progressDrawable="@drawable/custom_progressbar_drawable"
             android:secondaryProgress="0"
-            app:layout_constraintBottom_toTopOf="@+id/aqiProgressBar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.035"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.36" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/coNumberTextView"
@@ -113,6 +83,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textSize="40dp"
             android:textStyle="bold"
+            android:gravity="center"
             app:layout_constraintBottom_toBottomOf="@+id/coProgressBar"
             app:layout_constraintEnd_toEndOf="@+id/coProgressBar"
             app:layout_constraintStart_toStartOf="@+id/coProgressBar"
@@ -138,26 +109,23 @@
         <ProgressBar
             android:id="@+id/o3ProgressBar"
             style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="167dp"
-            android:layout_height="155dp"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
             android:layout_centerInParent="true"
-            android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="44dp"
             android:indeterminate="false"
             android:max="100"
             android:progress="0"
             android:progressDrawable="@drawable/custom_progressbar_drawable"
             android:secondaryProgress="0"
-            app:layout_constraintBottom_toTopOf="@+id/aqiProgressBar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.964"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.36" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/o3NumberTextView"
@@ -175,6 +143,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textSize="40dp"
             android:textStyle="bold"
+            android:gravity="center"
             app:layout_constraintBottom_toBottomOf="@+id/o3ProgressBar"
             app:layout_constraintEnd_toEndOf="@+id/o3ProgressBar"
             app:layout_constraintStart_toStartOf="@+id/o3ProgressBar"
@@ -201,8 +170,8 @@
         <ProgressBar
             android:id="@+id/no2ProgressBar"
             style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="167dp"
-            android:layout_height="155dp"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
             android:layout_centerInParent="true"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
@@ -219,8 +188,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.035"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/aqiTitleTextView"
-            app:layout_constraintVertical_bias="0.36" />
+            app:layout_constraintTop_toTopOf="@+id/coTitleTextView"
+            app:layout_constraintVertical_bias="0.133" />
 
         <TextView
             android:id="@+id/no2NumberTextView"
@@ -237,6 +206,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textSize="40dp"
             android:textStyle="bold"
+            android:gravity="center"
             app:layout_constraintBottom_toBottomOf="@+id/no2ProgressBar"
             app:layout_constraintEnd_toEndOf="@+id/no2ProgressBar"
             app:layout_constraintStart_toStartOf="@+id/no2ProgressBar"
@@ -263,8 +233,8 @@
         <ProgressBar
             android:id="@+id/so2ProgressBar"
             style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="167dp"
-            android:layout_height="155dp"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
             android:layout_centerInParent="true"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
@@ -281,8 +251,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.964"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/aqiTitleTextView"
-            app:layout_constraintVertical_bias="0.352" />
+            app:layout_constraintTop_toTopOf="@+id/o3TitleTextView"
+            app:layout_constraintVertical_bias="0.133" />
 
         <TextView
             android:id="@+id/so2NumberTextView"
@@ -299,6 +269,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textSize="40dp"
             android:textStyle="bold"
+            android:gravity="center"
             app:layout_constraintBottom_toBottomOf="@+id/so2ProgressBar"
             app:layout_constraintEnd_toEndOf="@+id/so2ProgressBar"
             app:layout_constraintStart_toStartOf="@+id/so2ProgressBar"
@@ -328,6 +299,21 @@
             android:scaleType="fitXY"
             android:src="@drawable/aqi_index"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="120dp"
+            android:layout_height="96dp"
+            android:layout_marginBottom="12dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="92dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="92dp"
+            android:src="@drawable/tempicon"
+            app:layout_constraintBottom_toTopOf="@+id/tempTitleTextView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent" />
